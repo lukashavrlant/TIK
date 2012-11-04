@@ -310,5 +310,99 @@ Kód $C$ opravuje $d$ chyb pokud pro každé kódové slovo $u\in C$ a každé s
 \end{frame}
 
 
+\begin{frame}[t,fragile]\frametitle{Oprava chyb podruhé} 
+\begin{veta}
+$C$ opravuje $d$ chyb právě tehdy, když $d(C)>2d$.
+\end{veta}
+
+\begin{itemizex}
+    \item Největší $d$ takové, že $C$ opravuje $d$ chyb je $d=\lfloor(d(C)-1)/2\rfloor$. Příklady:
+    \item Kontrola parity má $d(C)=2$, takže opravuje 0 chyb. 
+    \item Opakovací kód $C_3$ opravuje $(3-1)/2=1$ chybu.
+\end{itemizex}
+\end{frame}
+
+
+
+\begin{frame}[t,fragile]\frametitle{Důkaz} 
+\begin{veta}$C$ opravuje $d$ chyb právě tehdy, když $d(C)>2d$.\end{veta}
+\uv{$\Leftarrow$}: Nechť $d(C)>2d$. Dále nechť $u\in C, v\in B^n:$ $\delta(u,v)\le d$. Sporem předpokládejme, že pro $w\in C, w\ne u$ platí $\delta(w,v)\le\delta(u,v)$. Použijeme trojúhelníkovou nerovnost:
+$$
+\delta(w,v)+\delta(u,v)\ge\delta(w,u)
+$$
+Přitom ale $\delta(u,v)\le d$ a zároveň $\delta(w,v)\le d$, takže:
+$$
+2d=d+d\ge\delta(w,v)+\delta(u,v)\ge\delta(w,u).
+$$
+Dostáváme $2d\ge\delta(w,u)$, což je spor s předpokladem, protože $u,w\in C$.
+\end{frame}
+
+
+\begin{frame}[t,fragile]\frametitle{Důkaz: pokračování} 
+\begin{veta}$C$ opravuje $d$ chyb právě tehdy, když $d(C)>2d$.\end{veta}
+\uv{$\Rightarrow$}: Nechť $C$ opravuje $d$ chyb. Opět sporem předpokládejme, že $d(C)\le 2d$ a že tak existují $u,w\in C$ taková, že $t=\delta(u,w)\le2d$. Rozdělme důkaz na dva případy.
+
+Když je $t$ sudé. Dále nechť $v$ je slovo, které má vzdálenost $t/2$ od obou slov $u, w$. Slovo $v$ sestrojíme takto: nechť $I=\{i\sep u_i\ne w_i\}$, takže $|I|=t$. Dále $J\subset I$ a $|J|=t/2$. Takže pokud $I=\{i_1, i_2, \dots, i_t\}$, tak $J$ může např. vypadat $J=\{i_1, i_2, \dots, i_{t/2}\}$. Pak $v_i=u_i$ pro všechna $i\in J$ a $v_i=w_i$ pro všechna $i\notin J$.
+
+Potom $\delta(u,v)=t/2=\delta(u,w)$. Proto $\delta(u,v)=t/2\le d$, ale $\delta(u,v)=\delta(u,w)$, což je spor s tím, že $C$ opravuje $d$ chyb. 
+\end{frame}
+
+
+\begin{frame}[t,fragile]\frametitle{Důkaz: finále} 
+Když je $t$ liché. Pak $t+1$ je sudé, přitom $t+1\le2d$. Stejně jako v předchozím kroku, nechť $v$ má vzdálenost $(t+1)/2$ od obou slov $u$ a $w$. Tedy $\delta(u,v)=(t+1)/2\le d$, ale $\delta(u,v)=\delta(u,w)$, což je spor s předpokladem, že kód $C$ opravuje $d$ chyb.\qed
+\end{frame}
+
+
+\begin{frame}[t,fragile]\frametitle{Příklady} 
+    \begin{itemizex}
+        \item \textbf{Kontrola parity:} $d(C)=2$, kód neopravuje žádnou chybu.
+        \item \textbf{Opakovací kód:} $d(C_n)=n$, kód opravuje $\lfloor(n-1)/2\rfloor$ chyb. 
+    \end{itemizex}
+
+
+\end{frame}
+
+
+
+\begin{frame}[t,fragile]\frametitle{Dvoudimenzionální kontrola sudé parity} 
+Informační symboly umístíme do matice $p-1\times q-1$, ke které přidáme jeden sloupec a jeden řádek pro kontrolní součty, tj. aby celý řádek/sloupec obsahoval sudý počet jedniček. Příklad pro $(p,q)=(4,5)$:
+
+$$
+\begin{array}{cccc|c}
+0&1&1&0&0\\
+0&0&1&0&1\\
+1&1&1&0&1\\\hline
+1&0&1&0&0
+\end{array}
+$$
+
+Kód opravuje 1 chybu. Jaká je $d(C)$?
+\end{frame}
+
+
+\begin{frame}[t,fragile]\frametitle{Kód dva-z-pěti} 
+    \begin{itemize4}
+        \item Binární blokový kód s délkou $n=5$.
+        \item Kódová slova obsahují 2 jedničky. Celkem: ${5\choose2}=10$ možností.
+        \item $00011, 00101, 00110,01001,01010,\dots$
+        \item Populární na reprezentování číslic. 
+        \item Dekódování: Můžeme přidat váhu jednotlivým pozicím: 0, 1, 2, 3, 6. Potom můžeme kódové slovo $00101$ dekódovat jako: $0\cdot0+0\cdot1+1\cdot2+0\cdot3+1\cdot6=8$.
+        \item Trojka je reprezentována dvěma slovy: $10010$ a $01100$. Druhá možnost se používá pro nulu. 
+        \item $d(C)=2$, hodnocení kódu nemůžeme určit, $|C|=10$ není mocnina dvou.
+    \end{itemize4}
+\end{frame}
+
+
+\begin{frame}[t,fragile]\frametitle{Systematický kód} 
+\begin{definice}
+Blokový kód $C$ o délce $n$ nazýváme \textbf{systematický} kód, pokud pro nějaké $k<n$, pro všechna slova $u\in B^k$, existuje právě jedno slovo $v\in B^{n-k}$ takové, že $uv\in C$ je kódové slovo.
+\end{definice}
+
+\begin{itemizex}
+    \item Opakovací kód a kód sudé parity jsou systematické kódy.
+    \item $R(C)=\frac{k}{n}$
+    \item $d(C)\le n-k+1$
+\end{itemizex}
+\end{frame}
 
 \end{document}
