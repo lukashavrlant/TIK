@@ -1,0 +1,234 @@
+\documentclass{beamer}
+\usetheme[pageofpages=z,
+          bullet=circle,
+          titleline=true,
+          alternativetitlepage=true,
+          titlepagelogo=uplogo,
+          ]{UVT}
+
+\usepackage[utf8x]{inputenc}
+\usepackage{czech}
+\usepackage{minted}
+\usepackage{amssymb}
+\usepackage{amsthm}
+
+\newenvironment{definice}{\textbf{Definice:} }{}
+
+\newcommand{\sep}{\,|\,}
+
+\newenvironment{itemizex}%
+  {\large \begin{itemize}%
+    \setlength{\itemsep}{8pt}%
+    \setlength{\parskip}{8pt}}%
+  {\end{itemize}}
+
+  \newenvironment{itemize4}%
+  {\large \begin{itemize}%
+    \setlength{\itemsep}{4pt}%
+    \setlength{\parskip}{4pt}}%
+  {\end{itemize}}
+
+\newenvironment{itemizey}%
+  {\large \begin{itemize}%
+    \setlength{\itemsep}{6pt}%
+    \setlength{\parskip}{6pt}}%
+  {\end{itemize}}
+
+\newenvironment{enumeratex}%
+  {\large \begin{enumerate}%
+    \setlength{\itemsep}{6pt}%
+    \setlength{\parskip}{6pt}}%
+  {\end{enumerate}}
+
+
+\title{Teorie informace a kódování (KMI/TIK)}
+\subtitle{Bezpečnostní kódy}
+\author{Lukáš Havrlant}
+\date{13. listopadu 2012}
+\institute{Univerzita Palackého}
+
+\begin{document}
+
+\begin{frame}[t,plain]
+\titlepage
+\end{frame}
+
+
+\begin{frame}[t,fragile]{Konzultace}
+\begin{itemizex}
+\item V pracovně 5.076.
+\item Každý čtvrtek 9.00--11.00. 
+\item Emaily:
+  \begin{itemizex}
+    \item lukas.havrlant+skola@gmail.com
+    \item lukas.havrlant@upol.cz
+  \end{itemizex}
+\item Web: \url{http://tux.inf.upol.cz/~havrlant/}
+\end{itemizex}
+\end{frame}
+
+
+\begin{frame}[t,fragile]{Doporučená literatura}
+\begin{itemize}
+    \item Adámek J.: Foundations of Coding. J. Wiley, 1991.
+    \item Adámek J.: Kódování. SNTL, Praha, 1989. (lze stáhnout na \url{http://notorola.sh.cvut.cz/~bruxy/})
+    \item Ash R. B.: Information Theory. Dover, New York, 1990.
+\end{itemize}
+\end{frame}
+
+
+\begin{frame}[t,fragile]\frametitle{Úvod} 
+    \begin{itemizex}
+        \item Při přenosu dat může dojít k chybě $\longrightarrow$ jak odhalit chybu? (znáte: CRC, hash) Jak opravit chybu?
+        \item Chyba může být dvojí:
+            \begin{enumerate}
+                \item Záměna znaku: 101010 $\longrightarrow$ 101000 (o tento se budeme zajímat)
+                \item Vytvoření nového znaku: 101010 $\longrightarrow$ 1010101. Pohlcení znaku: 101010 $\longrightarrow$ 10110
+            \end{enumerate}
+        \item Základní princip: redundance informace. 
+        \item Čeština je hodně redundantí: \uv{opakkvání} $\longrightarrow$ \uv{opakování}, ale \uv{sekers} $\longrightarrow$ \uv{sekera} nebo \uv{sekery}?
+    \end{itemizex}
+\end{frame}
+
+
+\begin{frame}[t,fragile]\frametitle{Příklad kódování objevující jednu chybu} 
+    \begin{itemizex}
+        \item Kontrola parity: kód doplní na konec slova 0/1 tak, aby slovo mělo sudý počet jedniček.
+        \item Vstupem je slovo $w$, doplníme $a\in\{0,1\}$, vznikne slovo $wa$.
+        \item Pokud $w=001$, pak $a=1$ a $wa=0011$.
+        \item Pokud $w=101$, pak $a=0$ a $wa=1010$.
+        \item Kód objevuje 1 chybu: pokud přijmeme $1011$, nastala chyba.
+        \item Kód nerozponá dvě chyby! Vyšleme $1010$, přijmeme $1111$. 
+    \end{itemizex}
+\end{frame}
+
+
+\begin{frame}[t,fragile]\frametitle{Příklad kódování opravující jednoduché chyby} 
+    \begin{itemizex}
+        \item Opakující kód -- symbol odešleme třikrát. 
+        \item 0 $\longrightarrow$ 000; 1 $\longrightarrow$ 111.
+        \item Pokud přijmeme 010, poslali jsme původně 000 (nebo nastala více než jedna chyba).
+    \end{itemizex}
+\end{frame}
+
+
+\begin{frame}[t,fragile]\frametitle{Cíl} 
+    \begin{itemizex}
+        \item Opakující kód je neefektivní, pokud máme slovo délky $n$, po zakódování má délku $3n$.
+        \item Cíl: sestrojit kód, který objeví/opraví co nejvíce chyb při co nejnižší redundanci.
+        \item Uvažujeme pouze blokové kódy.
+    \end{itemizex}
+\end{frame}
+
+
+
+\begin{frame}[t,fragile]\frametitle{Kódová a nekódová slova} 
+    \begin{itemizey}
+        \item Kódová abeceda $B$, délka kódového slova je $n$, pak pro kód $C$ platí: $C\subseteq B^n$.
+        \item $B^n=\{b_1b_2\dots b_n|b_i\in B \mbox{ pro } i = 1,2\dots n\}$
+        \item $C$ je množina kódových slov, $B^n\setminus C$ množina nekódových slov.
+        \item Pokud přijmeme nekódové slovo, tak jsme \uv{objevili chybu}.
+        \item Pokud přijmeme kódové slovo, tak jsme\dots?
+        \item Kontrola parity: pro $n=4$ máme 
+            \begin{itemize}
+                \item $B^n=\{0000, 0001, 0010, 0011, 0100, 0101, \dots\}; \quad |B^n|=2^4=16$
+                \item $C=\{0000, 0011, 0101, 0110, \dots\}; \quad |C|=8$
+            \end{itemize}
+    \end{itemizey}
+\end{frame}
+
+
+% \begin{frame}[t,fragile]\frametitle{$t$-násobná chyba} 
+%     \begin{itemizex}
+%         \item $t$-násobná chyba nastane, pokud počet chybných míst je nejvýše $t$, $t\in\mathbb{N}$.
+%         \item Příklady dvojnásobných chyb:
+%             \begin{itemize}
+%                 \item 1111 $\longrightarrow$ 1100
+%                 \item 1111 $\longrightarrow$ 1011
+%             \end{itemize}
+%         \item Kód \textit{objevuje} $t$-násobné chyby, pokud při odeslání kódového slova a vzniku $t$-násobné chyby, přijmeme vždy nekódové slovo.
+%     \end{itemizex}
+% \end{frame}
+
+
+\begin{frame}[t,fragile]\frametitle{Hodnocení kódu (rate)} 
+    \begin{itemizey}
+        \item Typický způsob kódování slova:
+        \item Máme slovo délky $k$. Přidáme symboly z kódové abecedy a získáme slovo o délce $n$.
+        \item Původním $k$ symbolům říkáme \textit{informační symboly}.
+        \item $n-k$ symbolům říkáme \textit{kontrolní symboly}.
+        \item Poměr $R(C)=\frac{k}{n}$ měří redundanci kódu.
+    \end{itemizey}
+
+    \begin{definice}
+    Nechť $C$ je blokový kód o délce $n$. Pokud $|C|=|B|^k$ pro nějaké $k\in\mathbb{N}$, řekneme, že \textit{hodnocení kódu} $R(C)$ je
+    $$
+    R(C) = \frac{k}{n}.
+    $$
+    \end{definice}
+\end{frame}
+
+
+\begin{frame}[t,fragile]\frametitle{Příklady hodnocení kódů} 
+    \begin{itemizex}
+        \item \textbf{Opakovací kód}
+        \begin{itemize4}
+            \item Kód $C_n$ má na abecedě $A=B$ kódová slova $\{a^n\sep a\in B\}$
+            \item Pro $A=\{0,1\}$ máme $C_3=\{000,111\}, C_5=\{00000,11111\}$
+            \item $|B|=n, |C|=n, k=1;\quad R(C_n)=\frac{1}{n}$
+        \end{itemize4}
+        \item \textbf{Kontrolní parita}
+        \begin{itemize4}
+            \item Pro kód délky $n$ platí: $C_n=\{w \mbox{ má sudý počet 1}\sep w\in \{0,1\}^n\}$
+            \item $C_3=\{000,011,101,110\}$
+            \item Pro $C_3$: $|B|=2, |C|=4, k=2;\quad R(C_3)=\frac23$
+            \item Pro $C_n$: $|B|=2, |C|=2^{n-1}, k=n-1;\quad R(C_n)=\frac{n-1}{n}$
+        \end{itemize4}
+    \end{itemizex}
+\end{frame}
+
+
+\begin{frame}[t,fragile]\frametitle{Hammingova vzdálenost} 
+    \begin{definice} Pro slova $u=u_1\cdots u_n, v=v_1\cdots v_n\in B^n$ definujeme zobrazení
+    $$
+    \delta(u,v) = |\{i\sep 1\le i \le n, u_i\ne v_i\}|.
+    $$
+    Tj. $\delta(u,v)$ vrací počet pozic, na kterých se slova $u$ a $v$ liší. Zobrazení $\delta$ nazýváme \textbf{Hammingova vzdálenost}. $\delta$ je metrikou na $B^n$:
+    \begin{eqnarray*}
+    \delta(u,v)&\ge&0,\\
+    \delta(u,v)&=&0 \mbox{ iff } u=v,\\
+    \delta(u,v)&=&\delta(v,u),\\
+    \delta(u,v)&\le&\delta(u,w)+\delta(w,v).
+    \end{eqnarray*}
+
+    $\delta(011,101)=2, \quad \delta(011, 111)=1,\quad \delta(0110, 1001)=4,$ $\delta(0123, 0145)=2, \quad\delta(01,01)=0$
+    \end{definice}
+\end{frame}
+
+
+\begin{frame}[t,fragile]\frametitle{Důkaz trojúhelníkové nerovnosti} 
+Chceme dokázat: $\delta(u,v)\le\delta(u,w)+\delta(w,v)$. Označme:
+\begin{eqnarray*}
+U&=&\{i\sep 1\le i \le n, u_i\ne w_i\},\\
+V&=&\{i\sep 1\le i \le n, w_i\ne v_i\}.
+\end{eqnarray*}
+Pak $U\cup V$ je množina indexů, na kterých se $u$ může lišit od $v$. Pro všechna $i\in \{1,2,\dots,n\}\setminus(U\cup V)$ platí, že $u_i=w_i=u_i$. Dále
+\begin{eqnarray*}
+\delta(u,v)&\le&|U\cup V|.
+\end{eqnarray*}
+$\delta(u,v)$ může být menší, pokud $u_i\ne w_i \wedge w_i\ne v_i$, ale $u_i=v_i$. Pak $i\in U\cup V$, ale $i\notin \{j\sep 1\le j \le n, u_j\ne v_j\}$. Dostáváme:
+\begin{equation*}
+    \delta(u,v)\le|U\cup V|\le|U|+|V|=\delta(u,w)+\delta(w,v).\qed
+\end{equation*}
+\end{frame}
+
+
+\begin{frame}[t,fragile]\frametitle{Minimální vzdálenost} 
+    \begin{itemizex}
+        \item 
+    \end{itemizex}
+\end{frame}
+
+
+
+\end{document}
