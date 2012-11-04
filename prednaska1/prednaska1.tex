@@ -12,7 +12,28 @@
 \usepackage{amssymb}
 \usepackage{amsthm}
 
-\newenvironment{definice}{\textbf{Definice:} }{}
+\newenvironment{definice}
+{
+    \begin{center}
+    \begin{tabular}{p{9cm}}
+    \textbf{Definice:}
+}
+{
+    \end{tabular}
+    \end{center}
+}
+
+
+\newenvironment{veta}
+{
+    \begin{center}
+    \begin{tabular}{p{9cm}}
+    \textbf{Věta:}
+}
+{
+    \end{tabular}
+    \end{center}
+}
 
 \newcommand{\sep}{\,|\,}
 
@@ -138,27 +159,15 @@
 \end{frame}
 
 
-% \begin{frame}[t,fragile]\frametitle{$t$-násobná chyba} 
-%     \begin{itemizex}
-%         \item $t$-násobná chyba nastane, pokud počet chybných míst je nejvýše $t$, $t\in\mathbb{N}$.
-%         \item Příklady dvojnásobných chyb:
-%             \begin{itemize}
-%                 \item 1111 $\longrightarrow$ 1100
-%                 \item 1111 $\longrightarrow$ 1011
-%             \end{itemize}
-%         \item Kód \textit{objevuje} $t$-násobné chyby, pokud při odeslání kódového slova a vzniku $t$-násobné chyby, přijmeme vždy nekódové slovo.
-%     \end{itemizex}
-% \end{frame}
-
 
 \begin{frame}[t,fragile]\frametitle{Hodnocení kódu (rate)} 
-    \begin{itemizey}
+    \begin{itemize4}
         \item Typický způsob kódování slova:
         \item Máme slovo délky $k$. Přidáme symboly z kódové abecedy a získáme slovo o délce $n$.
         \item Původním $k$ symbolům říkáme \textit{informační symboly}.
         \item $n-k$ symbolům říkáme \textit{kontrolní symboly}.
         \item Poměr $R(C)=\frac{k}{n}$ měří redundanci kódu.
-    \end{itemizey}
+    \end{itemize4}
 
     \begin{definice}
     Nechť $C$ je blokový kód o délce $n$. Pokud $|C|=|B|^k$ pro nějaké $k\in\mathbb{N}$, řekneme, že \textit{hodnocení kódu} $R(C)$ je
@@ -195,8 +204,7 @@
     $$
     Tj. $\delta(u,v)$ vrací počet pozic, na kterých se slova $u$ a $v$ liší. Zobrazení $\delta$ nazýváme \textbf{Hammingova vzdálenost}. $\delta$ je metrikou na $B^n$:
     \begin{eqnarray*}
-    \delta(u,v)&\ge&0,\\
-    \delta(u,v)&=&0 \mbox{ iff } u=v,\\
+    \delta(u,v)&\ge&0 (=0 \mbox{ iff } u=v),\\
     \delta(u,v)&=&\delta(v,u),\\
     \delta(u,v)&\le&\delta(u,w)+\delta(w,v).
     \end{eqnarray*}
@@ -224,9 +232,81 @@ $\delta(u,v)$ může být menší, pokud $u_i\ne w_i \wedge w_i\ne v_i$, ale $u_
 
 
 \begin{frame}[t,fragile]\frametitle{Minimální vzdálenost} 
+\begin{definice}
+Minimální vzdálenost kódu $C$, zapíšeme $d(C)$, je minimální vzdálenost dvou různých slov z $C$:
+$$
+d(C) = \min\{\delta(u,v)\sep u,v\in C, u\ne v\}.
+$$
+\end{definice}
+
+Příklady:
+\begin{eqnarray*}
+C_1=\{0011, 1010, 1111\},& d(C_1)=2\\ 
+C_2=\{0011, 1010, 0101, 1111\},& d(C_2)=2\\ 
+C_3=\{000, 111, 100\},& d(C_3)=1
+\end{eqnarray*}
+\end{frame}
+
+
+\begin{frame}[t,fragile]\frametitle{Koule} 
+\begin{definice}
+Nechť $C$ je nějaký kód o délce $n$ a $u\in C$. Pak $B_q(u)=\{v\in B^n\sep \delta(u,v)\le q\}$ nazveme koule se středem v $u$ a poloměrem $q$.
+\end{definice}
+
+Důsledek: Kód $C$ má minimální vzdálenost $d(C)=d$ právě tehdy, když pro všechna $u\in C$ platí
+$$
+B_{d-1}(u) \cap C = \{u\}.
+$$
+\end{frame}
+
+
+\begin{frame}[t,fragile]\frametitle{Objevování chyb} 
     \begin{itemizex}
-        \item 
+        \item $t$ chyb nastane, pokud pošleme slovo $u$, přijmeme slovo $v$ a $\delta(u,v)=t$. (Slovo $u$ se od $v$ liší v $t$ symbolech.)
     \end{itemizex}
+
+\begin{definice}
+Kód $C$ \textit{objevuje} $d$ chyb, pokud při odeslání kódového slova a vzniku $t\le d$ chyb, přijmeme vždy nekódové slovo.
+\end{definice}
+
+\begin{veta}
+Kód $C$ \textit{objevuje} $d$ chyb právě když $d(C)>d$.
+\end{veta}
+
+Největší $d$ takové, že $C$ objevuje $d$ chyb je $d(C)-1$.
+\end{frame}
+
+
+\begin{frame}[t,fragile]\frametitle{Příklady} 
+    \begin{itemizex}
+        \item \textbf{Kontrola parity:}
+        \begin{itemize}
+            \item $d(C)=2$, takže kód objevuje 1 chybu.
+            \item Proč $d(C)=2$? Nechť $u,v\in B^{n-1}, u\ne v$. Slova zakódujeme, dostaneme $ua, vb$, kde $a, b\in B$. 
+            \begin{itemize}
+                \item Pokud $\delta(u,v)\ge2$, pak jistě $\delta(ua, vb)\ge2$.
+                \item Pokud $\delta(u,v)=1$, pak právě jedno ze slov obsahuje lichý počet jedniček a tedy $a\ne b$ a $\delta(ua, vb)=2$. 
+            \end{itemize}
+            \item Kód neopravuje žádnou chybu.
+        \end{itemize}
+        \item \textbf{Opakovací kód:}
+            \begin{itemize}
+                \item $d(C_n)=n$, takže kód objevuje $n-1$ chyb.
+                \item Kód může opravovat nějaké chyby.
+            \end{itemize}
+    \end{itemizex}
+\end{frame}
+
+
+\begin{frame}[t,fragile]\frametitle{Oprava chyb} 
+    \begin{itemizex}
+        \item Pokud přijmeme nekódové slovo $v$, \textit{opravíme} ho na takové kódové slovo $u$, které je slovu $v$ nejblíže. 
+        \item $\longrightarrow$ pro každé nekódové slovo musí existovat jediné kódové slovo, které je mu nejblíže. 
+    \end{itemizex}
+
+\begin{definice}
+Kód $C$ opravuje $d$ chyb pokud pro každé kódové slovo $u\in C$ a každé slovo $v$ takové, že $\delta(u, v) \le d$, platí, že slovo $u$ má od slova $v$ nejmenší vzdálenost ze všech slov z $C$. \\Tedy pokud $u\in C$ a $\delta(u,v)\le d$, pak $\delta(u,v)<\delta(w,v)$ pro všechna $w\in C, w\ne u$.
+\end{definice}
 \end{frame}
 
 
