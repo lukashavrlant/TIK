@@ -99,27 +99,28 @@
 
 
 \begin{frame}[t,fragile]\frametitle{Úvod} 
-    \begin{itemizex}
+    \begin{itemize4}
         \item Při přenosu dat může dojít k chybě $\longrightarrow$ jak odhalit chybu? (znáte: CRC, hash) Jak opravit chybu?
-        \item Chyba může být dvojí:
+        \item Chyba může být dvojího typu:
             \begin{enumerate}
                 \item Záměna znaku: 101010 $\longrightarrow$ 101000 (o tento se budeme zajímat)
                 \item Vytvoření nového znaku: 101010 $\longrightarrow$ 1010101. Pohlcení znaku: 101010 $\longrightarrow$ 10110
             \end{enumerate}
         \item Základní princip: redundance informace. 
         \item Čeština je hodně redundantí: \uv{opakkvání} $\longrightarrow$ \uv{opakování}, ale \uv{sekers} $\longrightarrow$ \uv{sekera} nebo \uv{sekery}?
-    \end{itemizex}
+        \item Všechna rodná čísla vytvořená od roku 1986 včetně jsou dělitelná jedenácti. 
+    \end{itemize4}
 \end{frame}
 
 
 \begin{frame}[t,fragile]\frametitle{Příklad kódování objevující jednu chybu} 
     \begin{itemizex}
-        \item Kontrola parity: kód doplní na konec slova 0/1 tak, aby slovo mělo sudý počet jedniček.
+        \item Kontrola sudé parity: kód doplní na konec slova 0/1 tak, aby slovo mělo sudý počet jedniček.
         \item Vstupem je slovo $w$, doplníme $a\in\{0,1\}$, vznikne slovo $wa$.
         \item Pokud $w=001$, pak $a=1$ a $wa=0011$.
         \item Pokud $w=101$, pak $a=0$ a $wa=1010$.
         \item Kód objevuje 1 chybu: pokud přijmeme $1011$, nastala chyba.
-        \item Kód nerozponá dvě chyby! Vyšleme $1010$, přijmeme $1111$. 
+        \item Kód nerozpozná dvě chyby! Vyšleme $1010$, přijmeme $1111$. 
     \end{itemizex}
 \end{frame}
 
@@ -135,7 +136,7 @@
 
 \begin{frame}[t,fragile]\frametitle{Cíl} 
     \begin{itemizex}
-        \item Opakující kód je neefektivní, pokud máme slovo délky $n$, po zakódování má délku $3n$.
+        % \item Opakující kód je neefektivní, pokud máme slovo délky $n$, po zakódování má délku $3n$.
         \item Cíl: sestrojit kód, který objeví/opraví co nejvíce chyb při co nejnižší redundanci.
         \item Uvažujeme pouze blokové kódy.
     \end{itemizex}
@@ -145,12 +146,12 @@
 
 \begin{frame}[t,fragile]\frametitle{Kódová a nekódová slova} 
     \begin{itemizey}
-        \item Kódová abeceda $B$, délka kódového slova je $n$, pak pro kód $C$ platí: $C\subseteq B^n$.
+        \item Zdrojová abeceda $A$, kódová abeceda $B$, délka kódového slova je $n$, pak pro kód $C$ platí: $C\subseteq B^n$.
         \item $B^n=\{b_1b_2\dots b_n|b_i\in B \mbox{ pro } i = 1,2\dots n\}$
         \item $C$ je množina kódových slov, $B^n\setminus C$ množina nekódových slov.
-        \item Pokud přijmeme nekódové slovo, tak jsme \uv{objevili chybu}.
-        \item Pokud přijmeme kódové slovo, tak jsme\dots?
-        \item Kontrola parity: pro $n=4$ máme 
+        \item Přijmeme-li nekódové slovo, tak během přenosu nastala chyba.
+        \item Pokud přijmeme kódové slovo, tak během přenosu\dots?
+        \item Kontrola sudé parity: pro $n=4$ máme 
             \begin{itemize}
                 \item $B^n=\{0000, 0001, 0010, 0011, 0100, 0101, \dots\}; \quad |B^n|=2^4=16$
                 \item $C=\{0000, 0011, 0101, 0110, \dots\}; \quad |C|=8$
@@ -160,9 +161,9 @@
 
 
 
-\begin{frame}[t,fragile]\frametitle{Hodnocení kódu (rate)} 
+\begin{frame}[t,fragile]\frametitle{Informační poměr kódu (rate)} 
     \begin{itemize4}
-        \item Typický způsob kódování slova:
+        % \item Typický způsob kódování slova:
         \item Máme slovo délky $k$. Přidáme symboly z kódové abecedy a získáme slovo o délce $n$.
         \item Původním $k$ symbolům říkáme \textit{informační symboly}.
         \item $n-k$ symbolům říkáme \textit{kontrolní symboly}.
@@ -170,7 +171,7 @@
     \end{itemize4}
 
     \begin{definice}
-    Nechť $C$ je blokový kód o délce $n$. Pokud $|C|=|B|^k$ pro nějaké $k\in\mathbb{N}$, řekneme, že \textit{hodnocení kódu} $R(C)$ je
+    Nechť $C$ je blokový kód o délce $n$. Pokud $|C|=|B|^k$ pro nějaké $k\in\mathbb{N}$, řekneme, že \textit{informační poměr kódu} $R(C)$ je
     $$
     R(C) = \frac{k}{n}.
     $$
@@ -178,15 +179,15 @@
 \end{frame}
 
 
-\begin{frame}[t,fragile]\frametitle{Příklady hodnocení kódů} 
+\begin{frame}[t,fragile]\frametitle{Příklady informačních poměrů} 
     \begin{itemizex}
         \item \textbf{Opakovací kód}
         \begin{itemize4}
-            \item Kód $C_n$ má na abecedě $A=B$ kódová slova $\{a^n\sep a\in B\}$
-            \item Pro $A=\{0,1\}$ máme $C_3=\{000,111\}, C_5=\{00000,11111\}$
-            \item $|B|=n, |C|=n, k=1;\quad R(C_n)=\frac{1}{n}$
+            \item Kód $C_n$ má na abecedě $B$ kódová slova $\{a^n\sep a\in B\}$
+            \item Pro $B=\{0,1\}$ máme $C_3=\{000,111\}, C_5=\{00000,11111\}$
+            \item $|B|=|C|, k=1;\quad R(C_n)=\frac{1}{n}$
         \end{itemize4}
-        \item \textbf{Kontrolní parita}
+        \item \textbf{Kontrola sudé parity}
         \begin{itemize4}
             \item Pro kód délky $n$ platí: $C_n=\{w \mbox{ má sudý počet 1}\sep w\in \{0,1\}^n\}$
             \item $C_3=\{000,011,101,110\}$
@@ -204,7 +205,7 @@
     $$
     Tj. $\delta(u,v)$ vrací počet pozic, na kterých se slova $u$ a $v$ liší. Zobrazení $\delta$ nazýváme \textbf{Hammingova vzdálenost}. $\delta$ je metrikou na $B^n$:
     \begin{eqnarray*}
-    \delta(u,v)&\ge&0 (=0 \mbox{ iff } u=v),\\
+    \delta(u,v)&\ge&0\quad (=0 \mbox{ iff } u=v),\\
     \delta(u,v)&=&\delta(v,u),\\
     \delta(u,v)&\le&\delta(u,w)+\delta(w,v).
     \end{eqnarray*}
@@ -220,7 +221,7 @@ Chceme dokázat: $\delta(u,v)\le\delta(u,w)+\delta(w,v)$. Označme:
 U&=&\{i\sep 1\le i \le n, u_i\ne w_i\},\\
 V&=&\{i\sep 1\le i \le n, w_i\ne v_i\}.
 \end{eqnarray*}
-Pak $U\cup V$ je množina indexů, na kterých se $u$ může lišit od $v$. Pro všechna $i\in \{1,2,\dots,n\}\setminus(U\cup V)$ platí, že $u_i=w_i=u_i$. Dále
+Pak $U\cup V$ je množina indexů, na kterých se $u$ může lišit od $v$. Pro všechna $i\in \{1,2,\dots,n\}\setminus(U\cup V)$ platí, že $u_i=w_i=v_i$. Dále
 \begin{eqnarray*}
 \delta(u,v)&\le&|U\cup V|.
 \end{eqnarray*}
@@ -253,7 +254,7 @@ C_3=\{000, 111, 100\},& d(C_3)=1
 Nechť $C$ je nějaký kód o délce $n$ a $u\in C$. Pak $B_q(u)=\{v\in B^n\sep \delta(u,v)\le q\}$ nazveme koule se středem v $u$ a poloměrem $q$.
 \end{definice}
 
-Důsledek: Kód $C$ má minimální vzdálenost $d(C)=d$ právě tehdy, když pro všechna $u\in C$ platí
+Důsledek: Kód $C$ má minimální vzdálenost $d(C)\ge d$ právě tehdy, když pro všechna $u\in C$ platí
 $$
 B_{d-1}(u) \cap C = \{u\}.
 $$
@@ -279,7 +280,7 @@ Největší $d$ takové, že $C$ objevuje $d$ chyb je $d(C)-1$.
 
 \begin{frame}[t,fragile]\frametitle{Příklady} 
     \begin{itemizex}
-        \item \textbf{Kontrola parity:}
+        \item \textbf{Kontrola sudé parity:}
         \begin{itemize}
             \item $d(C)=2$, takže kód objevuje 1 chybu.
             \item Proč $d(C)=2$? Nechť $u,v\in B^{n-1}, u\ne v$. Slova zakódujeme, dostaneme $ua, vb$, kde $a, b\in B$. 
@@ -305,7 +306,7 @@ Největší $d$ takové, že $C$ objevuje $d$ chyb je $d(C)-1$.
     \end{itemizex}
 
 \begin{definice}
-Kód $C$ opravuje $d$ chyb pokud pro každé kódové slovo $u\in C$ a každé slovo $v$ takové, že $\delta(u, v) \le d$, platí, že slovo $u$ má od slova $v$ nejmenší vzdálenost ze všech slov z $C$. \\Tedy pokud $u\in C$ a $\delta(u,v)\le d$, pak $\delta(u,v)<\delta(w,v)$ pro všechna $w\in C, w\ne u$.
+Kód $C$ opravuje $d$ chyb pokud pro každé kódové slovo $u\in C$ a každé slovo $v\in B^n$ takové, že $\delta(u, v) \le d$, platí, že slovo $u$ má od slova $v$ nejmenší vzdálenost ze všech slov z $C$. \\Tedy pokud $u\in C$ a $\delta(u,v)\le d$, pak $\delta(u,v)<\delta(w,v)$ pro všechna $w\in C, w\ne u$.
 \end{definice}
 \end{frame}
 
@@ -317,7 +318,7 @@ $C$ opravuje $d$ chyb právě tehdy, když $d(C)>2d$.
 
 \begin{itemizex}
     \item Největší $d$ takové, že $C$ opravuje $d$ chyb je $d=\lfloor(d(C)-1)/2\rfloor$. Příklady:
-    \item Kontrola parity má $d(C)=2$, takže opravuje 0 chyb. 
+    \item Kontrola sudé parity má $d(C)=2$, takže opravuje 0 chyb. 
     \item Opakovací kód $C_3$ opravuje $(3-1)/2=1$ chybu.
 \end{itemizex}
 \end{frame}
@@ -355,7 +356,7 @@ Když je $t$ liché. Pak $t+1$ je sudé, přitom $t+1\le2d$. Stejně jako v pře
 
 \begin{frame}[t,fragile]\frametitle{Příklady} 
     \begin{itemizex}
-        \item \textbf{Kontrola parity:} $d(C)=2$, kód neopravuje žádnou chybu.
+        \item \textbf{Kontrola sudé parity:} $d(C)=2$, kód neopravuje žádnou chybu.
         \item \textbf{Opakovací kód:} $d(C_n)=n$, kód opravuje $\lfloor(n-1)/2\rfloor$ chyb. 
     \end{itemizex}
 
@@ -365,7 +366,7 @@ Když je $t$ liché. Pak $t+1$ je sudé, přitom $t+1\le2d$. Stejně jako v pře
 
 
 \begin{frame}[t,fragile]\frametitle{Dvoudimenzionální kontrola sudé parity} 
-Informační symboly umístíme do matice $p-1\times q-1$, ke které přidáme jeden sloupec a jeden řádek pro kontrolní součty, tj. aby celý řádek/sloupec obsahoval sudý počet jedniček. Příklad pro $(p,q)=(4,5)$:
+Informační symboly umístíme do matice $p-1\times q-1$, ke které přidáme jeden sloupec a jeden řádek pro kontrolní součty, tj. aby celý řádek/sloupec obsahoval sudý počet jedniček. Poslední bit nastavíme tak, aby celé slovo mělo sudou paritu. Příklad pro $(p,q)=(4,5)$:
 
 $$
 \begin{array}{cccc|c}
@@ -376,7 +377,7 @@ $$
 \end{array}
 $$
 
-Kód opravuje 1 chybu. Jaká je $d(C)$?
+Kód opravuje 1 chybu. 
 \end{frame}
 
 
@@ -388,7 +389,7 @@ Kód opravuje 1 chybu. Jaká je $d(C)$?
         \item Populární na reprezentování číslic. 
         \item Dekódování: Můžeme přidat váhu jednotlivým pozicím: 0, 1, 2, 3, 6. Potom můžeme kódové slovo $00101$ dekódovat jako: $0\cdot0+0\cdot1+1\cdot2+0\cdot3+1\cdot6=8$.
         \item Trojka je reprezentována dvěma slovy: $10010$ a $01100$. Druhá možnost se používá pro nulu. 
-        \item $d(C)=2$, hodnocení kódu nemůžeme určit, $|C|=10$ není mocnina dvou.
+        % \item $d(C)=2$, informační poměr kódu nemůžeme určit, $|C|=10$ není mocnina dvou.
     \end{itemize4}
 \end{frame}
 
@@ -401,8 +402,15 @@ Blokový kód $C$ o délce $n$ nazýváme \textbf{systematický} kód, pokud pro
 \begin{itemizex}
     \item Opakovací kód a kód sudé parity jsou systematické kódy.
     \item $R(C)=\frac{k}{n}$
-    \item $d(C)\le n-k+1$
 \end{itemizex}
+\end{frame}
+
+\begin{frame}[t,fragile]\frametitle{Cvičení} 
+    \begin{itemizex}
+        \item Jaká je $d(C)$ kódu dva-z-pěti? Jaký je informační poměr?
+        \item Jaká je $d(C)$ dvoudimenzionální kontroly sudé parity? Jaký je informační poměr?
+        \item Jaká je největší možná $d(C)$ systematického kódu, který má délku $n$ a $k$ informačních znaků?
+    \end{itemizex}
 \end{frame}
 
 \end{document}
