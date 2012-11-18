@@ -1,0 +1,428 @@
+\documentclass{beamer}
+\usetheme[pageofpages=z,
+          bullet=circle,
+          titleline=true,
+          alternativetitlepage=true,
+          titlepagelogo=uplogo,
+          ]{UVT}
+
+\usepackage[utf8x]{inputenc}
+\usepackage{czech}
+\usepackage{minted}
+\usepackage{amssymb}
+\usepackage{amsthm}
+
+\newenvironment{definice}
+{
+    \begin{center}
+    \begin{tabular}{p{9cm}}
+    \textbf{Definice:}
+}
+{
+    \end{tabular}
+    \end{center}
+}
+
+\newenvironment{lema}
+{
+    \begin{center}
+    \begin{tabular}{p{9cm}}
+    \textbf{Lemma:}
+}
+{
+    \end{tabular}
+    \end{center}
+}
+
+
+\newenvironment{veta}
+{
+    \begin{center}
+    \begin{tabular}{p{9cm}}
+    \textbf{Věta:}
+}
+{
+    \end{tabular}
+    \end{center}
+}
+
+\newcommand{\sep}{\,|\,}
+\newcommand{\zero}{\textbf{0}}
+\newcommand{\emptyline}{\\$\,$\\}
+
+\newenvironment{itemizex}%
+  {\large \begin{itemize}%
+    \setlength{\itemsep}{8pt}%
+    \setlength{\parskip}{8pt}}%
+  {\end{itemize}}
+
+  \newenvironment{itemize4}%
+  {\large \begin{itemize}%
+    \setlength{\itemsep}{4pt}%
+    \setlength{\parskip}{4pt}}%
+  {\end{itemize}}
+
+\newenvironment{itemizey}%
+  {\large \begin{itemize}%
+    \setlength{\itemsep}{6pt}%
+    \setlength{\parskip}{6pt}}%
+  {\end{itemize}}
+
+\newenvironment{enumeratex}%
+  {\large \begin{enumerate}%
+    \setlength{\itemsep}{6pt}%
+    \setlength{\parskip}{6pt}}%
+  {\end{enumerate}}
+
+
+\title{Teorie informace a kódování (KMI/TIK)}
+\subtitle{Binární lineární kódy}
+\author{Lukáš Havrlant}
+\date{20. listopadu 2012}
+\institute{Univerzita Palackého}
+
+\begin{document}
+
+\begin{frame}[t,plain]
+\titlepage
+\end{frame}
+
+
+
+\begin{frame}[t,fragile]\frametitle{Lineární kódy} 
+    \begin{itemizex}
+        \item Základní myšlenka: ke kódové abecedě $B$ přidáme algebraické operace $+$ a $\cdot$ tak, abychom z $B$ dostali těleso a z $B^n$ vektorový prostor.
+        \item Kódy potom můžeme popsat rovnicemi. 
+    \end{itemizex}
+\end{frame}
+
+
+\begin{frame}[t,fragile]\frametitle{Operace $+$ a $\cdot$ na $Z_2=\{0, 1\}$}
+$$
+\begin{array}{c|cc}
++&0&1\\\hline
+0&0&1\\
+1&1&0
+\end{array}
+\quad\mbox{a}\quad
+\begin{array}{c|cc}
+\cdot&0&1\\\hline
+0&0&0\\
+1&0&1
+\end{array}
+$$
+
+\begin{itemizex}
+    \item 0 je neutrální vzhledem k $+$, máme tak inverzní prvky vzhledem k $+$: $0+0=0$, takže $0=-0$ a $1+1=0$, takže $1=-1$.
+    \item Slova můžeme vidět jako vektory: $1101 = \left<1,1,0,1\right>$
+    \item Skalární násobení: $a\cdot\left<u_1, \dots, u_n\right> = \left<a\cdot u_1, \dots, a\cdot u_n\right>, a\in Z_2$.
+    \item Sčítání: $\left<u_1, \dots, u_n\right> + \left<v_1, \dots, v_n\right> = \left<u_1+v_1, \dots, u_n+v_n\right>$.
+\end{itemizex}
+\end{frame}
+
+
+
+\begin{frame}[t,fragile]\frametitle{Kódy jako rovnice} 
+    \begin{itemizex}
+        \item Důležité kódy jsme schopni popsat rovnicemi:
+        \item Pro slovo $x$ délky $n$ u kódu kontroly sudé parity
+$$
+x_1+x_2+\dots+x_n=0
+$$
+        \item Řešením této rovnice jsou všechna kódová slova.
+        \item Opakovací kód $C_n = \{a^n\sep a\in Z_2\}$, např. $C_3=\{000, 111\}$.
+  \begin{eqnarray*}
+  x_1+x_n&=&0\\
+  \dots\\
+  x_{n-1}+x_n&=&0
+  \end{eqnarray*}
+    \end{itemizex}
+\end{frame}
+
+
+\begin{frame}[t,fragile]\frametitle{Vektorový podprostor} 
+    \begin{itemizex}
+        \item Opakování: nechť $V$ je vektorový prostor na množině $K$. Pak $C\subset V$ je vektorový podprostor, pokud:
+      \begin{itemizex}
+        \item $\forall u,v \in C:\quad u+v\in C$
+        \item $\forall a\in K, u \in C:\quad a\cdot u\in C$
+      \end{itemizex}
+      \item Množina všech řešení systému homogenních rovnic tvoří vektorový podprostor.
+      \item Tj. $Z_2^n$ tvoří vektorový prostor, množina řešení $C$ tvoří vektorový podprostor.
+    \end{itemizex}
+\end{frame}
+
+
+
+\begin{frame}[t,fragile]\frametitle{Binární lineární blokové kódy} 
+    \begin{definice}
+Binární blokový kód $C$ se nazývá lineární, pokud $\forall u,v\in C$ platí $u+v=C$.
+    \end{definice}
+
+    \begin{itemizex}
+      
+      \item V našem případě: $V=\{0,1\}^n, K=\{0,1\}$
+      \item Proč tam nemusí být podmínka $\forall a\in K, u \in C:\quad a\cdot u\in C$?
+      \item Protože $1\cdot u = u$ a $0\cdot u = \textbf{0}$ $\longrightarrow$ potřebujeme, aby $C$ obsahovalo nulový vektor. Ten obsahuje, protože $u+u=\textbf{0}$.
+    \end{itemizex}
+\end{frame}
+
+
+\begin{frame}[t,fragile]\frametitle{} 
+  \begin{lema}
+    Pro $n\in\mathbb{N}$, množina $C$ všech řešení homogenního systému rovnic na množině $Z_2$ je vektorový podprostor $Z_2^n$. Tedy $C$ je lineární blokový kód.
+  \end{lema}
+
+  \begin{itemizex}
+    \item Důsledek: pokud popíšeme blokový kód homogenním systémem rovnic, je tento kód lineární.
+  \end{itemizex}
+\end{frame}
+
+
+\begin{frame}[t,fragile]\frametitle{Chybové slovo, Hammingova váha} 
+    \begin{definice}
+        Pokud pošleme slovo $u$ a přijmeme slovo $v$, pak slovo $e$, které má $1$ na pozicích, na kterých se $u$ od $v$ liší, se nazývá \textit{chybové slovo}.
+    \end{definice}
+
+    Přitom platí: $v = u + e$ a také $e = v-u\, (= v+u)$.
+
+    \begin{definice}
+    \textit{Hammingova váha} slova $u$ je rovna počtu symbolů v $u$, které se liší od $0$.
+    \end{definice}
+
+    \begin{definice}
+    \textit{Minimální váha} netriviálního kódu $C$ je nejmenší Hammingova váha nějakého slova z $C$ kromě nulového slova.
+    \end{definice}
+\end{frame}
+
+
+
+\begin{frame}[t,fragile]\frametitle{Vztah minimální váhy a minimální vzdálenosti kódu} 
+    \begin{veta}
+    Minimální váha netriviálního kódu $C$ je rovna $d(C)$.
+    \end{veta}
+
+    Důkaz: Směr $\mbox{min\_weight(C)}\ge d(C)$: Nechť $c$ je minimální váha $C$. Nechť $u$ je slovo s váhou $c$. Zřejmě $\delta(u, 0\dots0)\ge d(C)$.
+\emptyline
+    Směr $\mbox{min\_weight(C)}\le d(C)$: Nechť $d(C)=\delta(u,v)$ pro nějaká $u,v\in C$. Pak jistě také $u+v\in C$. Přitom Hammingova váha $u+v$ je rovna $\delta(u,v)$, protože $u+v$ má $1$ na těch pozicích, na kterých se slova $u,v$ liší. Tedy $\mbox{min\_weight(C)}\le d(C)$.
+\emptyline
+    Celkově tak máme $d(C) = \mbox{min\_weight(C)}$.
+\end{frame}
+
+
+\begin{frame}[t,fragile]\frametitle{Kontrolní matice kódu} 
+    \begin{definice}
+        Kontrolní matice binárního blokového kódu $C$ o délce $n$ je binární matice $H$ taková, že pro všechny $x=(x_1,\dots, x_n)\in\{0,1\}^n$ máme
+$$
+H
+\begin{pmatrix}
+x_1\\
+x_2\\
+\vdots\\
+x_n
+\end{pmatrix}
+=
+\begin{pmatrix}
+0\\
+0\\
+\vdots\\
+0
+\end{pmatrix}
+$$
+    \end{definice}
+
+    Matice $H$ je kontrolní maticí kódu $C$, pokud platí:
+
+$$
+C=\{x\in\{0,1\}^n\sep Hx^T=\textbf{0}^T\}
+$$
+\end{frame}
+
+
+\begin{frame}[t,fragile]\frametitle{Příklady kontrolních matic} 
+    \begin{itemizey}
+        \item Pokud jsou řádky kontrolní matice nezávislé, $H$ je $n-k\times n$ matice. Kód pak má $n-k$ kontrolních symbolů a $n$ celkových.
+        % \item $n-k$ je počet kontrolních symbolů = počet řádků matice.
+        \item Kontrolní matice kódu kontroly sudé parity o délce $n$ je matice $1\times n$:
+$$
+H = (1\dots1)
+$$
+        \item Kontrolní matice pro opakovací kód délky $5$ je matice $4\times5$:
+$$
+H=
+\begin{pmatrix}
+1&1&0&0&0\\
+1&0&1&0&0\\
+1&0&0&1&0\\
+1&0&0&0&1
+\end{pmatrix}
+$$
+    \end{itemizey}
+\end{frame}
+
+
+
+
+\begin{frame}[t,fragile]\frametitle{Věta o kontrolní matici I} 
+    \begin{veta}
+Pokud binární kód $C$ opravuje jednoduché chyby, pak kontrolní matice kódu $C$ má nenulové a navzájem různé sloupce. 
+    \end{veta}
+
+    Důkaz: Pokud $C$ opravuje jednoduché chyby, pak $d(C)>2$ a minimální váha je také $>2$. Nechť $H$ je kontrolní matice pro $C$. Nechť vektor $b^i\in\{0,1\}^n$ má $1$ právě na pozici $i$. Nechť vektor $b^{i,j}\in\{0,1\}^n$ má $1$ právě na pozicích $i$ a $j$. Pokud by matice $H$ měla $i$-tý sloupec nulový, pak $Hb^{i^T}=\zero^T$. Ale $b^i$ je přitom slovo s Hammingovou váhou $1$, což je spor s tím, že minimální váha kódu $C$ je $>2$.
+\emptyline
+    Pokud by $H$ měla stejné sloupce $i$ a $j$, pak $Hb^{{i,j}^T}=\zero^T$. ($Hb^{{i,j}^T}$ je součet sloupců $i$ a $j$). Nicméně $b^{i,j}$ je slovo s váhou $2$, což je opět spor s tím, že minimální vzdálenost kódu $C$ je $>2$. $\qed$
+\end{frame}
+
+
+\begin{frame}[t,fragile]\frametitle{Věta o kontrolní matici II} 
+    \begin{veta}
+    Každá binární matice s nenulovými a navzájem různými sloupci je kontrolní matice binárního lineárního kódu, který opravuje jednoduché chyby.
+    \end{veta}
+
+    Důkaz: Nechť $H$ je matice, která má nenulové a navzájem různé sloupce. Z předchozího slajdu je zřejmé, že žádné slovo $b^i$ a $b^{i, j}$ není kódovým slovem, tedy minimální váha a tím i minimální vzdálenost kódu je $>2$. $\qed$
+\end{frame}
+
+
+
+\begin{frame}[t,fragile]\frametitle{Příklad} 
+$$
+H=\begin{pmatrix}
+0&0\\
+0&1\\
+1&1
+\end{pmatrix}
+$$
+\dots je kontrolní matice binárního lineárního kódu. Přepíšeme do rovnic:
+\begin{eqnarray*}
+(0x_1+0x_2&=&0)\\
+x_2&=&0\\
+x_1+x_2&=&0
+\end{eqnarray*}
+
+Systém má jediné, nulové řešení. Systém tak generuje kód $C=\{00\}$.
+\end{frame}
+
+
+\begin{frame}[t,fragile]\frametitle{Přidáme sloupec\dots} 
+$$
+H=\begin{pmatrix}
+0&0&1\\
+0&1&0\\
+1&1&0
+\end{pmatrix}
+$$
+
+Systém má opět jediné, nulové řešení, takže $C=\{000\}$.
+\end{frame}
+
+
+\begin{frame}[t,fragile]\frametitle{Přidáme ještě jeden sloupec\dots} 
+$$
+H=\begin{pmatrix}
+0&0&1&0\\
+0&1&0&1\\
+1&1&0&0
+\end{pmatrix}
+$$
+
+\begin{itemizey}
+    \item Kódová slova mají délku 4. Jak vypadá $C$? 
+    \item Jak by vypadalo $C$, kdybychom prohodili poslední dva sloupce?
+    \item Přidáním dalších sloupců zvyšujeme počet informačních symbolů.
+    \item Kolik sloupců může matice nejvýše mít?
+    \item Takový kód opravuje právě jednu chybu. Proč ne dvě?
+\end{itemizey}
+\end{frame}
+
+
+\begin{frame}[t,fragile]\frametitle{Kód opravuje jednu chybu} 
+Aby opravoval dvě chyby, musel by mít kód $C$ minimální váhu $>4$. Tedy matice musí mít $>4$ sloupce. Ovšem pokud má 3 řádky, pak jistě existují tři nebo čtyři sloupce, jejichž součet je nulový sloupec.
+\emptyline
+Vezmeme libovolné čtyři sloupce $i, j, k, l$. Protože matice má 3 řádky, hodnost je maximálně 3, tak určitě alespoň jeden ze sloupců je lineárně závislý. Nechť $i$-tý sloupec je lineárně závislý, tj. $H_i=a_j\cdot H_j+a_k\cdot H_k+a_l\cdot H_l$. Dva nebo tři koeficienty musí být rovné 1 -- řekněme, že buď $a_j, a_k$, nebo $a_j, a_k, a_l$. Pak součet sloupců $i,j,k$ nebo sloupců $i,j,k,l$ je roven nulovému sloupci.
+\emptyline
+Což znamená, že pro vektor $u$ s $1$ na pozicích $i,j,k$ nebo $i,j,k,l$ platí $Hu^T=\zero^T$, tedy $u$ je kódové slovo. Ale váha $u$ je tři, nebo čtyři, stejně tak minimální váha (a tím pádem i vzdálenost) kódu. 
+\end{frame}
+
+
+
+\begin{frame}[t,fragile]\frametitle{Hammingovy kódy} 
+    \begin{itemizex}
+        \item Perfektní kódy pro opravu jednoduchých chyb.
+        \item Kódová slova mají délku $n=2^m-1$, $m$ symbolů je kontrolních. Minimální vzdálenost je 3.
+        \item Nazývají se $(2^m-1,2^m-m-1)$ kódy, např. $(7,4)$.
+        \item Sloupce kontrolní matice jsou všechny nenulové vektory seřazené lexikograficky (= podle hodnot, pokud bychom je převedli na číslo v desítkové soustavě). Pro $m=2$:
+$$
+H=
+\begin{pmatrix}
+0&1&1\\
+1&0&1
+\end{pmatrix}
+$$
+    \end{itemizex}
+\end{frame}
+
+
+\begin{frame}[t,fragile]\frametitle{Definice Hammingova kódu} 
+    \begin{definice}
+Hammingův kód je binární lineární kód, který má, pro nějaké $m$, $m\times2^m-1$ kontrolní matici, jejíž sloupce jsou nenulové. 
+    \end{definice}
+
+    Příklad kontrolní matice (jedné z mnoha) pro $m=3$. Dostáváme matici $3\times7$:
+
+$$H=
+\begin{pmatrix}
+0&0&0&1&1&1&1\\
+0&1&1&0&0&1&1\\
+1&0&1&0&1&0&1
+\end{pmatrix}$$
+\end{frame}
+
+
+\begin{frame}[t,fragile]\frametitle{Zakódování} 
+Předchozí matici můžeme přepsat na tento systém rovnic:
+
+$$
+\begin{array}{ccccccccc}
+&&&x_4+&x_5+&x_6+&x_7&=&0\\
+&x_2+&x_3+&&&x_6+&x_7&=&0\\
+x_1+&&x_3+&&x_5+&&x_7&=&0
+\end{array}
+$$
+A to můžeme přepsat na:
+\begin{eqnarray*}
+x_5&=&x_2+x_3+x_4\\
+x_6&=&x_1+x_3+x_4\\
+x_7&=&x_1+x_2+x_4
+\end{eqnarray*}
+
+Vidíme, že $x_1, x_2, x_3, x_4$ můžeme brát jako informační symboly a $x_5, x_6, x_7$ jako kontrolní, které dopočítáme. 
+\end{frame}
+
+
+
+\begin{frame}[t,fragile]\frametitle{Dekódování} 
+    \begin{itemizex}
+        \item Pokud je $u$ kódové slovo, pak $Hu^T=\zero^T$. 
+        \item Pokud nastane chyba na pozici $i$, přijmeme slovo $v=u+b^i$.
+$$
+Hv^T=H(u+b^i)^T=Hu^T+Hb^{i^T}=\zero^T+Hb^{i^T}=Hb^{i^T}=H_i
+$$
+        \item Součin $Hv^T$ je tak rovný $i$-tému sloupci matice $H$.
+        \item V $i$-tém sloupci je uloženo číslo $i$ v binární podobě.
+        \item $\longrightarrow$ opravíme $i$-tý znak ve slově $v$.
+    \end{itemizex}
+\end{frame}
+
+
+
+\begin{frame}[t,fragile]\frametitle{Informační poměr} 
+    \begin{itemizey}
+        \item Informační poměr Hammingova kódu je $R(C)=\frac{2^m-m-1}{2^m-1}=$\\$=1-\frac{m}{2^m-1}$ $\longrightarrow$ malá redundance pro velká $m$.
+        \item Vždy jsme ale schopni opravit jen jednu chybu.
+        \item Hammingovy kódy jsou perfektní, protože mají nejmenší možnou redundanci na množině kódů opravující jednoduché chyby.
+        \item Každé slovo délky $n=2^m-1$ je buď kódové, nebo je od kódového slova vzdáleno o jedna.
+        \item (Během dekódování buď získáme kódové slovo, nebo nám stačí změnit jeden bit.)
+    \end{itemizey}
+\end{frame}
+
+\end{document}
