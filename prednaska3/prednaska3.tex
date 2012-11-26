@@ -1,0 +1,599 @@
+\documentclass{beamer}
+\usetheme[pageofpages=z,
+          bullet=circle,
+          titleline=true,
+          alternativetitlepage=true,
+          titlepagelogo=uplogo,
+          ]{UVT}
+
+\usepackage[utf8x]{inputenc}
+\usepackage{czech}
+\usepackage{minted}
+\usepackage{amssymb}
+\usepackage{amsthm}
+
+\newenvironment{definice}
+{
+    \begin{center}
+    \begin{tabular}{p{9cm}}
+    \textbf{Definice:}
+}
+{
+    \end{tabular}
+    \end{center}
+}
+
+
+\newenvironment{veta}
+{
+    \begin{center}
+    \begin{tabular}{p{9cm}}
+    \textbf{Věta:}
+}
+{
+    \end{tabular}
+    \end{center}
+}
+
+\newcommand{\sep}{\,|\,}
+\newcommand{\G}{\textbf{G}}
+\newcommand{\F}{\textbf{F}}
+\newcommand{\vu}{\textbf{u}}
+\newcommand{\vv}{\textbf{v}}
+\newcommand{\e}{\textbf{e}}
+\newcommand{\s}{\textbf{s}}
+\newcommand{\vr}{\textbf{r}}
+\renewcommand{\span}{\mbox{span}}
+\newcommand{\zero}{\textbf{0}}
+\newcommand{\emptyline}{\\$\,$\\}
+
+\newenvironment{itemizex}%
+  {\large \begin{itemize}%
+    \setlength{\itemsep}{8pt}%
+    \setlength{\parskip}{8pt}}%
+  {\end{itemize}}
+
+  \newenvironment{itemize4}%
+  {\large \begin{itemize}%
+    \setlength{\itemsep}{4pt}%
+    \setlength{\parskip}{4pt}}%
+  {\end{itemize}}
+
+\newenvironment{itemizey}%
+  {\large \begin{itemize}%
+    \setlength{\itemsep}{6pt}%
+    \setlength{\parskip}{6pt}}%
+  {\end{itemize}}
+
+\newenvironment{enumeratex}%
+  {\large \begin{enumerate}%
+    \setlength{\itemsep}{6pt}%
+    \setlength{\parskip}{6pt}}%
+  {\end{enumerate}}
+
+
+\title{Teorie informace a kódování (KMI/TIK)}
+\subtitle{Lineární kódy}
+\author{Lukáš Havrlant}
+\date{27. listopadu 2012}
+\institute{Univerzita Palackého}
+
+\begin{document}
+
+\begin{frame}[t,plain]
+\titlepage
+\end{frame}
+
+
+
+\begin{frame}[t,fragile]\frametitle{Grupa} 
+    \begin{itemizex}
+        \item Grupa je algebraická struktura $\G=\left<G,+\right>$, kde $+$ je binární operace na $G$ splňující: 
+            \begin{itemize}
+                \item $\forall x,y,z\in G: x+(y+z)=(x+y)+z$ (asociativita)
+                \item Existuje prvek $0\in G$ takový, že $\forall x\in G: x+0=0+x=x$ (neutrální prvek)
+                \item $\forall x\in G$ existuje $y\in G$ takový, že $x+y=y+x=0$ (inverzní prvek)
+            \end{itemize}
+        \item Pokud navíc $\forall x,y\in G: x+y=y+x$, pak mluvíme o komutativní grupě.
+        \item Příklad: $\mathbb{Z}$ a $\mathbb{R}$ s klasickým násobením, $\mathbb{Z}_p=\{0,\dots,p-1\}$ s násobením modulo $p$.
+    \end{itemizex}
+\end{frame}
+
+
+\begin{frame}[t,fragile]\frametitle{Těleso} 
+    \begin{itemizex}
+        \item Těleso je algebraická struktura $\F=\left<F,+,\cdot,0,1\right>$, kde $+$ a $\cdot$ jsou binární operace na $F$ splňující:
+        \begin{itemize}
+            \item $\left<F,+,0\right>$ je komutativní grupa,
+            \item $\left<F\setminus\{0\},\cdot,1\right>$ je komutativní* grupa,
+            \item $\forall x,y,z\in G: x\cdot(y+z)=x\cdot y+x\cdot z$ (distributivita).
+        \end{itemize}
+        \item Důsledky pro $x,y,z\in F$: 
+        \begin{itemize}
+            \item $x\cdot1=x$, $xy=xz$ implikuje $y=z$.
+            \item $x+y\in F$ a $xy\in F$. Pokud $x\ne0, y\ne0$, pak $xy\ne0$.
+            \item Každý prvek $x$ má opačný prvek $-x$ takový, že $x-x=0$.
+            \item Každý prvek $x\ne0$ má inverzní prvek $x^{-1}$ takový, že $xx^{-1}=1$.
+        \end{itemize}
+        \item Příklady: $\mathbb{R}$ s klasickým sčítáním a násobením, $\mathbb{Z}_p$ modulo $p$ , pokud je $p$ prvočíslo.
+    \end{itemizex}
+\end{frame}
+
+
+
+\begin{frame}[t,fragile]\frametitle{Vektorový prostor} 
+    \begin{definice}
+        Nechť $\F=\left<F,+,\cdot,0,1\right>$ je těleso. Vektorový prostor na $\F$ je struktura $\textbf{V}$ obsahující neprázdnou množinu vektorů $V$, binární operaci $+$: $V\times V\rightarrow V$ a binární operaci $\cdot$: $F\times V\rightarrow V$ takové, že $\forall a,b\in F, \vu,\vv\in V$: 
+
+        \begin{itemize4}
+            \item $\left<V,+\right>$ je komutativní grupa,
+            \item $(ab)\vv=a(b\vv)$,
+            \item $a(\vu+\vv)=a\vu+a\vv$,
+            \item $1\vu=\vu$.
+        \end{itemize4}
+    \end{definice}
+\end{frame}
+
+
+\begin{frame}[t,fragile]\frametitle{Příklad vektorového prostoru} 
+    \begin{itemizex}
+        \item Nechť $F$ je těleso. Pak množina $F^n=\{\left<a_1,\dots,a_n\right>\sep a_i\in F\}$, kde sčítání $+$ vektorů a násobení $\cdot$ vektoru je definováno klasicky, tvoří vektorový prostor.
+        \item $\mathbb{R}, \mathbb{Z}_p$, \dots 
+        \item Pro $p=2$ dostáváme u $\mathbb{Z}_p$ vektorový prostor, který jsme použili u binárních lineárních kódů.
+    \end{itemizex}
+\end{frame}
+
+
+\begin{frame}[t,fragile]\frametitle{Vektorový podprostor} 
+    \begin{itemizex}
+        \item Nechť $V$ je vektorový prostor na tělese $F$. Pak $\emptyset\ne U\subseteq V$ s operacemi $+$ a $\cdot$ nazveme vektorový podprostor, pokud platí $\forall \vu,\vv\in U, a\in F$:
+        \begin{itemize}
+            \item $\vu+\vv\in U$,
+            \item $a\vu\in U$.
+        \end{itemize}
+
+        \item Příklad: Pro těleso $F$, množina $\{\left<0,a_2,\dots,a_n\right>\sep a_i\in F \}$ je vektorový podprostor prostoru $F^n$.
+        \item $\{\textbf{0}\}$ je triviální vektorový podprostor.
+    \end{itemizex}
+\end{frame}
+
+
+\begin{frame}[t,fragile]\frametitle{Lineární kombinace} 
+    \begin{itemizex}
+        \item Lineární kombinace vektorů $\vu_1, \dots, \vu_n\in V$ je vektor $a_1\vu_1+\dots+a_n\vu_n$, kde $a_1,\dots,a_n\in F$.
+        \item Pokud máme danou množinu vektorů $\vu_1, \dots, \vu_n\in V$, pak množina všech lineárních kombinací těchto vektorů tvoří vektorový podprostor prostoru $V$.
+        \item Tento podprostor značíme $\span(\{\vu_1, \dots, \vu_n\})$.
+        \item $\span(\{\vu_1, \dots, \vu_n\})$ je nejmenší podprostor obsahující vektory $\vu_1, \dots, \vu_n$.
+    \end{itemizex}
+\end{frame}
+
+
+
+\begin{frame}[t,fragile]\frametitle{Nezávislosti vektorů, báze, dimenze} 
+    \begin{itemizey}
+        \item Množina vektorů $U\subseteq V$ se nazývá lineárně nezávislá, pokud žádný vektor $\vu\in U$ není lineární kombinací $U\setminus\{\vu\}$.
+        \item Báze prostoru $V$ je lineárně nezávislá množina $U\subseteq V$, pro kterou platí $\span(U)=V$.
+        \item Pokud je $U$ báze prostoru $V$, pak má prostor $V$ dimenzi $|U|$.
+        \item Pokud $U=\{\e_1,\dots,\e_n\}$ je báze prostoru $V$, pak pro každé $\vu\in V$ existují unikátní skaláry $a_1,\dots,a_n\in F$ tak, že $\vu=a_1\e_1+\dots+a_n\e_n$.
+        \item Pokud $|F|=r$, pak každý $k$-rozměrný vektorový prostor na $F$ má $r^k$ prvků.
+    \end{itemizey}
+\end{frame}
+
+
+\begin{frame}[t,fragile]\frametitle{Lineární kódy} 
+    \begin{definice}
+        Nechť $F$ je konečné těleso. Pak lineární $(n,k)$ kód je $k$-dimenzionální vektorový (lineární) podprostor prostoru $F^n$. 
+    \end{definice}
+
+    \begin{itemizex}
+        \item Lineární $(n,k)$ kód má $k$ informačních symbolů a $n-k$ kontrolních.
+        \item Nechť $C$ je lineární $(n,k)$ kód. Pak má bázi $\e_1,\dots,\e_k$.
+        \item Každé slovo $\vv\in C$ lze vyjádřit jako lineární kombinace vektorů báze: $\vv=\sum_{i=1}^k u_i\e_i$. Koeficienty $u_i\in F$ tvoří slovo $\vu$ délky $k$.
+        \item A naopak: každé slovo $\vu$ délky $k$ definuje kódové slovo $\vv$: $\vv=\sum_{i=1}^ku_i\e_i$
+    \end{itemizex}
+\end{frame}
+
+
+\begin{frame}[t,fragile]\frametitle{Generující matice} 
+    \begin{definice}
+        \item Pokud je $C$ lineární kód s bází $\e_1,\dots,\e_k$, pak matice $G$ typu $k\times n$ a tvaru
+        $$
+        G=
+        \begin{pmatrix}
+        \e_1\\
+        \vdots\\
+        \e_k
+        \end{pmatrix}
+        =
+        \begin{pmatrix}
+        e_{11}&\dots&e_{1n}\\
+        \vdots&\ddots&\vdots\\
+        e_{k1}&\dots&e{kn}
+        \end{pmatrix}
+        $$
+        se nazývá generující matice kódu $C$.
+    \end{definice}
+\end{frame}
+
+
+\begin{frame}[t,fragile]\frametitle{Příklad generující matice: kód sudé parity} 
+Generující matice kódu sudé parity délky $4$:
+$$
+G=
+\begin{pmatrix}
+1&1&0&0\\
+1&0&1&0\\
+1&0&0&1
+\end{pmatrix}
+=
+\begin{pmatrix}
+\e_1\\
+\e_2\\
+\e_3
+\end{pmatrix}
+$$
+Co musí platit:
+
+\begin{itemizey}
+    \item Každý řádek je kódové slovo.
+    \item Řádky jsou nezávislé. 
+    \item Kód má délku $4$, matice musí mít $4$ sloupce.
+    \item Kód má $1$ kontrolní a 3 informační symboly, musí mít 3 řádky. 
+    \item Každé kódové slovo lze vyjádřit jako kombinace řádků matice.
+\end{itemizey}
+\end{frame}
+
+
+\begin{frame}[t,fragile]\frametitle{Elementární úpravy generující matice} 
+    \begin{itemizex}
+        \item Pokud je $G$ generující matice kódu $C$, pak matice $G'$ vzniklá z $G$ pomocí elementárních maticových úprav je opět generující maticí kódu $C$.
+    \end{itemizex}
+
+    $$
+\begin{pmatrix}
+1&1&0&0\\
+1&0&1&0\\
+1&0&0&1
+\end{pmatrix}
+\sim
+\begin{pmatrix}
+1&0&0&1\\
+0&1&0&1\\
+0&0&1&1
+\end{pmatrix}
+    $$
+\end{frame}
+
+\begin{frame}[t,fragile]\frametitle{Další příklad} 
+    \begin{itemize4}
+        \item Nechť $F=\mathbb{Z}_3$. Matice
+        $$
+\begin{pmatrix}
+1&1&0&0&0&0\\
+0&0&2&2&0&0\\
+1&1&1&1&1&1\\
+\end{pmatrix}
+        $$
+        je generující matice lineárního $(6,3)$ kódu.
+        \item Řádky jsou nezávislé, takže tvoří bázi 3-dimenzionálního podprostoru prostoru $F^6$.
+        $$
+\begin{pmatrix}
+1&1&0&0&0&0\\
+0&0&2&2&0&0\\
+1&1&1&1&1&1\\
+\end{pmatrix}
+\sim
+\begin{pmatrix}
+1&1&0&0&0&0\\
+0&0&1&1&0&0\\
+0&0&0&0&1&1\\
+\end{pmatrix}
+        $$
+        \item Kód $C$ obsahuje slova $112200, 220011,$ atd.
+    \end{itemize4}
+\end{frame}
+
+
+\begin{frame}[t,fragile]\frametitle{Kódování} 
+    \begin{itemizex}
+        \item Nechť $G$ je $k\times n$ generující matice obsahující vektory $\e_1,\dots,\e_k$. 
+        \item Každý vektor $\vu=u_1\dots u_k$ jednoznačně definuje vektor $\vv$: $\vv=\sum_{i=1}^ku_i\e_i$
+        \item Tedy $\vv=\vu G$
+        \item Slovo $\vu$ tak můžeme zakódovat pomocí předpisu:
+        $$
+        e(\vu) = \vu G
+        $$
+    \end{itemizex}
+\end{frame}
+
+
+\begin{frame}[t,fragile]\frametitle{Systematický kód} 
+    \begin{itemizex}
+        \item Různé generující matice vedou k různým pravidlům kódování.
+        \item Nejběžnější způsob je systematický kód: vybereme $u_1\dots u_k$ symbolů a doplníme $u_{k+1}\dots u_{n}$.
+        \item Generující matice má pak tvar $G=(E|B)$, kde $E$ je jednotková $k\times k$ matice a $B$ je $k\times n-k$ matice. 
+    \begin{definice}
+    Lineární kód se nazývá systematický, pokud má generující matici tvaru $G=(E|B)$.
+    \end{definice}
+    \end{itemizex}
+\end{frame}
+
+
+\begin{frame}[t,fragile]\frametitle{Ekvivalentní kód} 
+\begin{definice}
+Kódy $C_1$ a $C_2$ se nazývají ekvivalentní, pokud existuje permutace $\pi$ množiny $\{1,\dots,n\}$ taková, že pro všechna $u_1,\dots,u_n\in F$:
+$$
+u_1,\dots,u_n\in C_1 \mbox{ právě když } u_{\pi(1)},\dots u_{\pi(n)} \in C_2
+$$
+\end{definice}
+
+\begin{itemizex}
+    \item Hammingův $(7,4)$ kód je systematický, kód sudé parity délky $4$ je systematický. Lineární $(6,3)$ kód z předchozích slajdů není systematický, ale je ekvivalentní systematickému kódu. 
+\end{itemizex}
+
+\begin{veta}
+Každý lineární kód je ekvivalentní systematickému kódu. 
+\end{veta}
+\end{frame}
+
+
+\begin{frame}[t,fragile]\frametitle{Kontrolní matice} 
+    \begin{definice}
+        Matice $H$, která má $n$ sloupců a obsahuje prvky z tělesa $F$ se nazývá kontrolní matice lineárního kódu $C$, jestliže pro všechna slova $\vu\in F^n$ platí
+        $$
+        \vu\in C \mbox{ právě tehdy když } H\vu^T=\textbf{0}^T.
+        $$
+    \end{definice}
+\end{frame}
+
+
+\begin{frame}[t,fragile]\frametitle{Vztah kontrolní a generující matice} 
+    \begin{veta}
+        Pro systematický kód $C$ s generující maticí $G=(E_1|B)$ platí, že matice $H=(-B^T|E_2)$ je kontrolní matice kódu $C$, kde $E_1$ je jednotková matice typu $k\times k$ a $E_2$ je jednotková matice typu $n-k\times n-k$.
+    \end{veta}
+
+    Důsledek: Každý lineární $(n,k)$ kód má $n-k\times n$ kontrolní matici o hodnosti $n-k$.
+\end{frame}
+
+
+\begin{frame}[t,fragile]\frametitle{Důkaz} 
+    Důkaz: Máme ověřit, že podprostor $C$ generovaný generující maticí $G$ je shodný s podprostorem $C'$ všech řešení rovnice $H\vv^T=\zero$. Přitom platí:
+    $$
+HG^T=\left(-B^T|E_2\right)\cdot\left(
+\begin{matrix}
+\underline{E_1}\\
+B^T
+\end{matrix}
+\right)
+=-B^TE_1+E_2B^T=-B^T+B^T=\zero
+    $$
+    Tedy pokud $G=(E_1|B)=\begin{pmatrix}
+    \e_1\\\dots\\\e_k
+    \end{pmatrix}$, pak $H\e_i^T=\zero$ pro všechna $i$. Z toho vyplývá, že všechna $\e_i$ jsou řešením rovnice $H\vv^T=\zero$ a že $\{\e_1,\dots,\e_k\}\subseteq C'$. Pokud $\{\e_1,\dots,\e_k\}\subseteq C'$, pak i $\span(\{\e_1,\dots,\e_k\})\subseteq C'$, přičemž $\span(\{\e_1,\dots,\e_k\})=C$. Prostor $C$ je tak podprostorem prostoru $C'$.
+\end{frame}
+
+\begin{frame}[t,fragile]\frametitle{Pokračování důkazu} 
+$$
+G=(E_1|B),\quad H=(-B^T|E_2)
+$$
+Nyní můžeme buď dokázat, že platí i $C\supseteq C'$. Ale stačí nám dokázat, že prostory mají stejnou dimenzi. 
+\emptyline
+Matice $G$ a tedy i matice $B$ má $k$ (lineárně nezávislých) řádků. Dimenze prostoru $C$ je tak rovna $k$.
+\emptyline 
+Jednotková matice $E_2$ je řádu $n-k$, takže matice $H$ má hodnost $h(H)=n-k$. Odtud plyne, že množina všech řešení rovnice $H\vv^T=\zero$ tvoří podprostor dimenze $n-h(H)=n-(n-k)=k$.
+\emptyline
+Dimenze prostorů $C$ a $C'$ jsou stejné, platí $C\subseteq C'$, takže $C=C'$. \qed
+\end{frame}
+
+
+\begin{frame}[t,fragile]\frametitle{Příklady kontrolní matice kódu sudé parity} 
+Generující matice paritního kódu $n=4, k=3$:
+$$
+G=
+\begin{pmatrix}
+1&0&0&1\\
+0&1&0&1\\
+0&0&1&1
+\end{pmatrix}
+=(E_1|B)
+$$
+Takže kontrolní matice $H=(-B^T|E_2)$ by vypadala: $-B^T=(111)$, $E_2$ by byla typu $1\times1$, tedy $(1)$:
+$$
+H=
+\begin{pmatrix}
+1&1&1&1
+\end{pmatrix}
+$$
+\end{frame}
+
+
+\begin{frame}[t,fragile]\frametitle{Příklad kontrolní matice Hammingova kódu} 
+Pro Hammingův $(7,4)$ kód máme generující matici:
+$$
+G=
+\begin{pmatrix}
+1&0&0&0&0&1&1\\
+0&1&0&0&1&0&1\\
+0&0&1&0&1&1&0\\
+0&0&0&1&1&1&1\\
+\end{pmatrix}
+=
+(E_1|B)
+$$
+Kontrolní matice:
+$$
+H=(-B^T|E_2)=
+\begin{pmatrix}
+0&1&1&1&1&0&0\\
+1&0&1&1&0&1&0\\
+1&1&0&1&0&0&1\\
+\end{pmatrix}
+$$
+\end{frame}
+
+
+\begin{frame}[t,fragile]\frametitle{Syndrom} 
+    \begin{itemizex}
+        \item Opakování: pokud odešleme slovo $\vu$ a přijmeme slovo $\vv$, pak slovo $\e=\vv-\vu$ nazýváme chybové slovo.
+        \item Pozor -- už neplatí rovnost $\vv-\vu=\vv+\vu$.
+
+        \begin{definice}
+    Nechť $H$ je $m\times n$ kontrolní matice kódu $C$. Syndrom slova $\vv$ je slovo $\s$ definované jako 
+    $$
+\s^T=H\vv^T.
+    $$\end{definice}
+
+    \end{itemizex}
+\end{frame}
+
+
+\begin{frame}[t,fragile]\frametitle{Vztah chybového slova a syndromu} 
+\begin{veta}
+Pokud vyšleme kódové slovo $\vu$, přijmeme nekódové slovo $\vv$, tak chybové slovo $\e=\vv-\vu$ a slovo $\vv$ mají stejný syndrom. Tedy platí:
+$$
+H\e^T=H\vv^T
+$$
+\end{veta}
+
+Důkaz: (využíváme faktu, že $H\vu^T=\zero^T$)
+$$
+H\e^T=H(\vv-\vu)^T=H\vv^T-H\vu^T=H\vv^T-\zero^T=H\vv^T
+$$
+\end{frame}
+
+
+
+\begin{frame}[t,fragile]\frametitle{Třída slova $\e$} 
+    \begin{itemizex}
+        \item Nechť $C$ je lineární $(n,k)$ kód s kontrolní maticí $H$, která vznikla z generující matice $G$.
+        \item Pro všechna slova $\e\in F^n$ definujeme množinu
+        $$
+        \e+C=\{\e+\vu\sep\vu\in C\},
+        $$
+        kterou nazveme třída slova $\e$.
+        \item $\e+C$ je množina všech slov, která můžeme přijmout, pokud nastane chyba $\e$.
+    \end{itemizex}
+\end{frame}
+
+
+
+\begin{frame}[t,fragile]\frametitle{Vlastnosti třídy slov} 
+    \begin{itemizex}
+        \item Pro libovolná $\e, \e' \in F^n$:
+        % \item Jestliže je $\e-\e'$ kódové slovo, pak $\e+C=\e'+C$.
+        % \item Jestliže není $\e-\e'$ kódové slovo, pak $\e+C\cap\e'+C=\emptyset$.
+        \item Pokud $\e\in C$, pak $\e+C=C$.
+        \item Buď $\e+C=\e'+C$, nebo $\e+C\cap \e'+C=\emptyset$.
+        \item Počet slov v každé třídě je roven počtu kódových slov, tj. $|\e+C|=|C|$.
+        \item Všechna slova z $\e+C$ mají stejný syndrom.
+    \end{itemizex}
+\end{frame}
+
+
+\begin{frame}[t,fragile]\frametitle{Příklad} 
+Binární $(4,3)$ kód sudé parity délky $3$:
+$$
+C=\{000, 101, 110, 011\}
+$$
+Zvolme $\e=110$:
+$$
+\e+C=\{110, 011, 000, 101\}
+$$
+Zvolme $\e'=010$:
+$$
+\e'+C=\{010, 111, 100, 001\}
+$$
+\end{frame}
+
+
+\begin{frame}[t,fragile]\frametitle{Dekódování} 
+    \begin{itemizex}
+        \item Reprezentant třídy $\e+C$ je slovo $\vr$, které má minimální Hammingovu váhu ze všech slov z $\e+C$.
+        \item Obecný princip dekódování pro jakýkoliv lineární kód:
+        \item Přijmeme slovo $\vv$. Spočítáme syndrom: $\s^T=H\vv^T$.
+        \item Z třídy slov $\s+C$ nalezneme reprezentanta $\vr$. (Proč? Předpokládáme, že nastalo co nejméně chyb. Čím menší váhu slovo $\vr$ bude mít, tím méně znaků změníme.)
+        \item Dekódujeme na slovo $\vu=\vv-\vr$.
+    \end{itemizex}
+\end{frame}
+
+
+\begin{frame}[t,fragile]\frametitle{Příklad} 
+Kontrolní kód sudé parity délky $3$ neopravuje žádnou chybu. Kontrolní matice:
+$$
+H=
+\begin{pmatrix}
+1&1&1
+\end{pmatrix}
+$$
+Vyšleme slovo $\vu=110$, přijeme slovo $\vv=100$. Spočítáme syndrom:
+$$
+\s=
+\begin{pmatrix}
+1&1&1
+\end{pmatrix}
+\cdot
+\begin{pmatrix}
+1&0&0
+\end{pmatrix}^T
+=1
+$$
+Syndromu $\s=1$ odpovídá třída $100+C=\{010, 111, 100, 001\}$. Vybereme reprezentanta $\longrightarrow$ problém, tři slova mají váhu $1$. Pokud vybereme $\e=010$, opravíme správně:
+$$
+\vu=\vv-\e=100-010=110
+$$
+Pokud vybereme $\e=001$, opravíme špatně:
+$$
+\vu=\vv-\e=100-001=101
+$$
+\end{frame}
+
+
+\begin{frame}[t,fragile]\frametitle{Poučení z příkladu} 
+    \begin{itemizey}
+        \item Pokud má lineární kód opravovat chybu, musí ve třídě $\e+C$ existovat vždy jediný unikátní nejmenší reprezentant třídy.
+        \item Pokud má kód $C$ minimální vzdálenost $d(C)$, pak kód opravuje $t<d(C)/2$ chyb. Pokud došlo během přenosu k $t$ chybám, kterým odpovídá chybové slovo $\e$, tak třída $\e+C$ obsahuje právě jedno slovo $\vr$ o váze $<d(C)/2$.
+    \end{itemizey}
+\end{frame}
+
+
+\begin{frame}[t,fragile]\frametitle{Důkaz} 
+Dokážeme, že pokud lineární kód $C$ opravuje $t$ chyb, které reprezentuje chybové slovo $\e$ o váze $t$, tak třída $\e+C$ obsahuje právě jedno slovo o váze $<d(C)/2$ a to slovo $\e$.
+\emptyline
+Předpokládejme, že jsme poslali slovo $\vu$, přijali slovo $\vv$ a během přenosu nastalo $t$ chyb, $\e=\vv-\vu$ a $|\e|=t$, kde $|\e|$ je váha slova $\e$.
+\emptyline
+Předpokládejme, že třída $\e+C$ obsahuje různá slova $\vv_1$ a $\vv_2$ taková, že $|\vv_1|<d(C)/2$ a $|\vv_2|<d(C)/2$. Pak ale také $\delta(\vv_1, \vv_2)<d(C)$. Přitom ale $\vv_1=\vu_1+\e$ a $\vv_2=\vu_2+\e$ pro nějaká $\vu_1, \vu_2\in C$. Po dosazení máme $\delta(\vu_1+\e, \vu_2+\e)<d(C)$ a tedy i $\delta(\vu_1, \vu_2)<d(C)$, což je spor s tím, že $\vu_1, \vu_2\in C$. Třída $\e+C$ tak obsahuje jediné slovo o váze $<d(C)/2$. Přitom platí, že $\zero\in C$, takže $\e+\zero\in\e+C$ a $|\e|=t<d(C)/2$. \qed
+\end{frame}
+
+
+\begin{frame}[t,fragile]\frametitle{Příklad} 
+Hammingův $(7,4)$ kód má kontrolní matici: 
+$$
+H=\begin{pmatrix}
+0&0&0&1&1&1&1\\
+0&1&1&0&0&1&1\\
+1&0&1&0&1&0&1
+\end{pmatrix}
+$$
+Slovo $\e_0=0000000$ má syndrom $000$, slovo $\e_1=1000000$ má syndrom $001$, slovo $\e_2=0100000$ má syndrom $010$ atd. Dostáváme tak třídy $\e_0+C, \e_1+C, \e_2+C,\dots$ a reprezentanty $\e_0, \e_1, \e_2\dots$
+\emptyline
+Pro $\vv=1010111$ máme $H\vv^T=(110)^T$. Syndrom $110$ má reprezentanta $\e_6=0000010$, takže dekódujeme
+$$
+\vu=\vv-0000010=1010101.
+$$
+\end{frame}
+
+
+% \begin{frame}[t,fragile]\frametitle{Dekódování} 
+%     \begin{itemizex}
+%         \item Pokud známe syndrom $\s$, chceme najít slovo $\e$, které má minimální Hammingovu váhu a přitom má syndrom $\s$. Tj. $H\e^T=\s^T$.
+%         \item Takové $\e$ se nazývá \textit{coset leader}. Postup při dekódování:
+%         \begin{enumerate}
+%             \item Přijmeme slovo $\vv$. Spočítáme syndrom: $\s^T=H\vv^T$.
+%             \item Zjistíme coset leader $\e$ se syndromem $\s$.
+%             \item Dekódujeme na slovo $\vu=\vv-\e$.
+%         \end{enumerate}
+%     \end{itemizex}
+% \end{frame}
+
+
+\end{document}
