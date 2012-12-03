@@ -43,7 +43,7 @@
 \newcommand{\e}{\textbf{e}}
 \newcommand{\s}{\textbf{s}}
 \newcommand{\vr}{\textbf{r}}
-\renewcommand{\span}{\mbox{span}}
+\renewcommand{\span}{\mbox{obal}}
 \newcommand{\zero}{\textbf{0}}
 \newcommand{\emptyline}{\\$\,$\\}
 
@@ -95,7 +95,7 @@
                 \item $\forall x\in G$ existuje $y\in G$ takový, že $x+y=y+x=0$ (inverzní prvek)
             \end{itemize}
         \item Pokud navíc $\forall x,y\in G: x+y=y+x$, pak mluvíme o komutativní grupě.
-        \item Příklad: $\mathbb{Z}$ a $\mathbb{R}$ s klasickým násobením, $\mathbb{Z}_p=\{0,\dots,p-1\}$ s násobením modulo $p$.
+        \item Příklad: $\mathbb{Z}$ a $\mathbb{R}$ s klasickým sčítáním, $\mathbb{Z}_p=\{0,\dots,p-1\}$ s násobením modulo $p$.
     \end{itemizex}
 \end{frame}
 
@@ -194,6 +194,23 @@
 \end{frame}
 
 
+\begin{frame}[t,fragile]\frametitle{Příklad} 
+    Báze kódu sudé parity délky $4$:
+    $$
+\e_1=1100,\quad\e_2=1010,\quad\e_3=1001
+    $$
+
+    Slovo $u=0011$ vyjádříme jako
+    $$
+u=0\cdot1100+1\cdot1010+1\cdot1001
+    $$
+    Slovo $u=1010$ jako
+    $$
+u=0\cdot1100+1\cdot1010+0\cdot1001
+    $$
+\end{frame}
+
+
 \begin{frame}[t,fragile]\frametitle{Generující matice} 
     \begin{definice}
         \item Pokud je $C$ lineární kód s bází $\e_1,\dots,\e_k$, pak matice $G$ typu $k\times n$ a tvaru
@@ -232,7 +249,7 @@ G=
 \e_3
 \end{pmatrix}
 $$
-Co musí platit:
+(Jak by vypadala matice pro kód liché parity?) Co musí platit:
 
 \begin{itemizey}
     \item Každý řádek je kódové slovo.
@@ -319,6 +336,56 @@ Co musí platit:
 \end{frame}
 
 
+\begin{frame}[t,fragile]\frametitle{Příklad generující matice systematického kódu} 
+Generující matice kódu sudé parity délky $n=4$:
+$$
+\begin{pmatrix}
+1&0&0&1\\
+0&1&0&1\\
+0&0&1&1
+\end{pmatrix}
+$$
+
+Generující matice Hammingova $(7,4)$ kódu:
+$$
+\begin{pmatrix}
+1&0&0&0&0&1&1\\
+0&1&0&0&1&0&1\\
+0&0&1&0&1&1&0\\
+0&0&0&1&1&1&1\\
+\end{pmatrix}
+$$
+\end{frame}
+
+
+\begin{frame}[t,fragile]\frametitle{Příklad kódování} 
+Zakódujeme slovo $\vu=100$ pomocí kódu sudé parity:
+
+$$
+\begin{pmatrix}
+1&0&0
+\end{pmatrix}
+\cdot
+\begin{pmatrix}
+1&0&0&1\\
+0&1&0&1\\
+0&0&1&1
+\end{pmatrix}
+=
+\begin{pmatrix}
+1&0&0&1
+\end{pmatrix}
+$$
+
+Výsledné kódové slovo je $\vv=1001$. 
+\emptyline
+Případně můžeme slovo $\vv$ spočítat pomocí koeficientů a vektorů báze:
+$$
+\vv=1\cdot(1001)+0\cdot(0101)+0\cdot(0011)=(1001)
+$$
+\end{frame}
+
+
 \begin{frame}[t,fragile]\frametitle{Ekvivalentní kód} 
 \begin{definice}
 Kódy $C_1$ a $C_2$ se nazývají ekvivalentní, pokud existuje permutace $\pi$ množiny $\{1,\dots,n\}$ taková, že pro všechna $u_1,\dots,u_n\in F$:
@@ -356,34 +423,6 @@ Každý lineární kód je ekvivalentní systematickému kódu.
 \end{frame}
 
 
-\begin{frame}[t,fragile]\frametitle{Důkaz} 
-    Důkaz: Máme ověřit, že podprostor $C$ generovaný generující maticí $G$ je shodný s podprostorem $C'$ všech řešení rovnice $H\vv^T=\zero$. Přitom platí:
-    $$
-HG^T=\left(-B^T|E_2\right)\cdot\left(
-\begin{matrix}
-\underline{E_1}\\
-B^T
-\end{matrix}
-\right)
-=-B^TE_1+E_2B^T=-B^T+B^T=\zero
-    $$
-    Tedy pokud $G=(E_1|B)=\begin{pmatrix}
-    \e_1\\\dots\\\e_k
-    \end{pmatrix}$, pak $H\e_i^T=\zero$ pro všechna $i$. Z toho vyplývá, že všechna $\e_i$ jsou řešením rovnice $H\vv^T=\zero$ a že $\{\e_1,\dots,\e_k\}\subseteq C'$. Pokud $\{\e_1,\dots,\e_k\}\subseteq C'$, pak i $\span(\{\e_1,\dots,\e_k\})\subseteq C'$, přičemž $\span(\{\e_1,\dots,\e_k\})=C$. Prostor $C$ je tak podprostorem prostoru $C'$.
-\end{frame}
-
-\begin{frame}[t,fragile]\frametitle{Pokračování důkazu} 
-$$
-G=(E_1|B),\quad H=(-B^T|E_2)
-$$
-Nyní můžeme buď dokázat, že platí i $C\supseteq C'$. Ale stačí nám dokázat, že prostory mají stejnou dimenzi. 
-\emptyline
-Matice $G$ a tedy i matice $B$ má $k$ (lineárně nezávislých) řádků. Dimenze prostoru $C$ je tak rovna $k$.
-\emptyline 
-Jednotková matice $E_2$ je řádu $n-k$, takže matice $H$ má hodnost $h(H)=n-k$. Odtud plyne, že množina všech řešení rovnice $H\vv^T=\zero$ tvoří podprostor dimenze $n-h(H)=n-(n-k)=k$.
-\emptyline
-Dimenze prostorů $C$ a $C'$ jsou stejné, platí $C\subseteq C'$, takže $C=C'$. \qed
-\end{frame}
 
 
 \begin{frame}[t,fragile]\frametitle{Příklady kontrolní matice kódu sudé parity} 
@@ -429,6 +468,37 @@ H=(-B^T|E_2)=
 1&1&0&1&0&0&1\\
 \end{pmatrix}
 $$
+\end{frame}
+
+
+
+\begin{frame}[t,fragile]\frametitle{Důkaz} 
+    Důkaz: Máme ověřit, že podprostor $C$ generovaný generující maticí $G$ je shodný s podprostorem $C'$ všech řešení rovnice $H\vv^T=\zero$. Přitom platí:
+    $$
+HG^T=\left(-B^T|E_2\right)\cdot\left(
+\begin{matrix}
+\underline{E_1}\\
+B^T
+\end{matrix}
+\right)
+=-B^TE_1+E_2B^T=-B^T+B^T=\zero
+    $$
+    Tedy pokud $G=(E_1|B)=\begin{pmatrix}
+    \e_1\\\dots\\\e_k
+    \end{pmatrix}$, pak $H\e_i^T=\zero$ pro všechna $i$. Z toho vyplývá, že všechna $\e_i$ jsou řešením rovnice $H\vv^T=\zero$ a že $\{\e_1,\dots,\e_k\}\subseteq C'$. Pokud $\{\e_1,\dots,\e_k\}\subseteq C'$, pak i $\span(\{\e_1,\dots,\e_k\})\subseteq C'$, přičemž $\span(\{\e_1,\dots,\e_k\})=C$. Prostor $C$ je tak podprostorem prostoru $C'$.
+\end{frame}
+
+\begin{frame}[t,fragile]\frametitle{Pokračování důkazu} 
+$$
+G=(E_1|B),\quad H=(-B^T|E_2)
+$$
+Nyní můžeme dokázat, že platí i $C\supseteq C'$, ale stačí nám dokázat, že prostory mají stejnou dimenzi, což bude jednodušší. 
+\emptyline
+Matice $G$ a tedy i matice $B$ má $k$ (lineárně nezávislých) řádků. Dimenze prostoru $C$ je tak rovna $k$.
+\emptyline 
+Jednotková matice $E_2$ je řádu $n-k$, takže matice $H$ má hodnost $h(H)=n-k$. Odtud plyne, že množina všech řešení rovnice $H\vv^T=\zero$ tvoří podprostor dimenze $n-h(H)=n-(n-k)=k$.
+\emptyline
+Dimenze prostorů $C$ a $C'$ jsou stejné, platí $C\subseteq C'$, takže $C=C'$. \qed
 \end{frame}
 
 
@@ -486,6 +556,7 @@ $$
         \item Buď $\e+C=\e'+C$, nebo $\e+C\cap \e'+C=\emptyset$.
         \item Počet slov v každé třídě je roven počtu kódových slov, tj. $|\e+C|=|C|$.
         \item Všechna slova z $\e+C$ mají stejný syndrom.
+        \item Kolik různých tříd pro lineární $(n,k)$ kód na abecedě $F$ existuje?
     \end{itemizex}
 \end{frame}
 
@@ -551,7 +622,9 @@ $$
 \begin{frame}[t,fragile]\frametitle{Poučení z příkladu} 
     \begin{itemizey}
         \item Pokud má lineární kód opravovat chybu, musí ve třídě $\e+C$ existovat vždy jediný unikátní nejmenší reprezentant třídy.
-        \item Pokud má kód $C$ minimální vzdálenost $d(C)$, pak kód opravuje $t<d(C)/2$ chyb. Pokud došlo během přenosu k $t$ chybám, kterým odpovídá chybové slovo $\e$, tak třída $\e+C$ obsahuje právě jedno slovo $\vr$ o váze $<d(C)/2$.
+        \begin{veta}
+        Pokud má lineární kód $C$ minimální vzdálenost $d(C)$, pak kód opravuje $t<d(C)/2$ chyb. Pokud došlo během přenosu k $t$ chybám, kterým odpovídá chybové slovo $\e$, tak třída $\e+C$ obsahuje právě jedno slovo o váze $<d(C)/2$ a to slovo $\e$.
+        \end{veta}
     \end{itemizey}
 \end{frame}
 

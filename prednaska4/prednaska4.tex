@@ -1,0 +1,542 @@
+\documentclass{beamer}
+\usetheme[pageofpages=z,
+          bullet=circle,
+          titleline=true,
+          alternativetitlepage=true,
+          titlepagelogo=uplogo,
+          ]{UVT}
+
+\usepackage[utf8x]{inputenc}
+\usepackage{czech}
+\usepackage{minted}
+\usepackage{amssymb}
+\usepackage{amsthm}
+
+\newenvironment{definice}
+{
+    \begin{center}
+    \begin{tabular}{p{9cm}}
+    \textbf{Definice:}
+}
+{
+    \end{tabular}
+    \end{center}
+}
+
+
+\newenvironment{veta}
+{
+    \begin{center}
+    \begin{tabular}{p{9cm}}
+    \textbf{Věta:}
+}
+{
+    \end{tabular}
+    \end{center}
+}
+
+\newcommand{\sep}{\,|\,}
+\newcommand{\G}{\textbf{G}}
+\newcommand{\F}{\textbf{F}}
+\newcommand{\vu}{\textbf{u}}
+\newcommand{\vv}{\textbf{v}}
+\newcommand{\e}{\textbf{e}}
+\newcommand{\s}{\textbf{s}}
+\newcommand{\vr}{\textbf{r}}
+\newcommand{\cela}{\mathbb{Z}}
+\renewcommand{\span}{\mbox{span}}
+\newcommand{\zero}{\textbf{0}}
+\newcommand{\one}{\textbf{1}}
+\newcommand{\emptyline}{\\$\,$\\}
+
+\newenvironment{itemizex}%
+  {\large \begin{itemize}%
+    \setlength{\itemsep}{8pt}%
+    \setlength{\parskip}{8pt}}%
+  {\end{itemize}}
+
+  \newenvironment{itemize4}%
+  {\large \begin{itemize}%
+    \setlength{\itemsep}{4pt}%
+    \setlength{\parskip}{4pt}}%
+  {\end{itemize}}
+
+\newenvironment{itemizey}%
+  {\large \begin{itemize}%
+    \setlength{\itemsep}{6pt}%
+    \setlength{\parskip}{6pt}}%
+  {\end{itemize}}
+
+\newenvironment{enumeratex}%
+  {\large \begin{enumerate}%
+    \setlength{\itemsep}{6pt}%
+    \setlength{\parskip}{6pt}}%
+  {\end{enumerate}}
+
+
+\title{Teorie informace a kódování (KMI/TIK)}
+\subtitle{Reed-Mullerovy kódy}
+\author{Lukáš Havrlant}
+\date{4. prosince 2012}
+\institute{Univerzita Palackého}
+
+\begin{document}
+
+\begin{frame}[t,plain]
+\titlepage
+\end{frame}
+
+
+\begin{frame}[t,fragile]\frametitle{Primární zdroj} 
+Jiří Adámek: Kódování. Strany 81--88.
+\end{frame}
+
+
+\begin{frame}[t,fragile]\frametitle{Boolovské funkce} 
+    \begin{itemizex}
+        \item Boolovská funkce $m$ proměnných je zobrazení $\cela_2^m\longrightarrow\cela_2$.
+        \item Zapisujeme např. pomocí tabulky:
+$$\begin{array}{l|cccc}
+x_1&0&1&0&1\\
+x_2&0&0&1&1\\\hline
+f'&1&0&1&1
+\end{array}
+\qquad
+\begin{array}{l|cccccccc}
+x_1&0&1&0&1&0&1&0&1\\
+x_2&0&0&1&1&0&0&1&1\\
+x_3&0&0&0&0&1&1&1&1\\\hline
+f''&1&1&0&1&1&1&0&1\\
+\end{array}$$
+        \item Hodnoty proměnných $x_i$ zapisujeme tak, aby sloupce tvořily čísla $0,1,\dots,2^m-1$ v binárním zápise.
+    \end{itemizex}
+\end{frame}
+
+
+\begin{frame}[t,fragile]\frametitle{Reprezentace boolovské funkce} 
+
+Boolovskou funkci o $m$ proměnných můžeme reprezentovat jako slovo délky $2^m$. Např. funkce
+$$\begin{array}{l|cccc}
+x_1&0&1&0&1\\
+x_2&0&0&1&1\\\hline
+f'&1&0&1&1
+\end{array}
+\qquad
+\begin{array}{l|cccccccc}
+x_1&0&1&0&1&0&1&0&1\\
+x_2&0&0&1&1&0&0&1&1\\
+x_3&0&0&0&0&1&1&1&1\\\hline
+f''&1&1&0&1&1&1&0&1\\
+\end{array}$$
+        můžeme reprezentovat jako slova $f'=1011$ a $f''=11011101$, tj. jen jako poslední řádek. 
+
+\end{frame}
+
+
+
+\begin{frame}[t,fragile]\frametitle{Definice boolovské funkce} 
+\begin{definice}
+Slovo $f\in\cela_2^{2^m}$ tvaru $f=f_0f_1\dots f_{2^m-1}$, nazveme boolovskou funkcí o $m$ proměnných, definovanou předpisem $f(j_1, j_2, \dots, j_m)$ je rovno $f_j$, pokud má $j$ binární rozvoj $j_mj_{m-1}\dots j_1$.
+\end{definice}
+
+Příklad: nechť $f=11110010$ je boolovská funkce o 3 proměnných. Pak $f(0,0,1)$ vyhodnotíme jako  číslo $100_2$, což odpovídá číslu $4_{10}$, takže $f(0,0,1)=f_4=0$.
+
+$$
+\begin{array}{l|cccccccc}
+x_1&0&1&0&1&0&1&0&1\\
+x_2&0&0&1&1&0&0&1&1\\
+x_3&0&0&0&0&1&1&1&1\\\hline
+f&1&1&1&1&0&0&1&0
+\end{array}
+$$
+\end{frame}
+
+
+\begin{frame}[t,fragile]\frametitle{Zajímavé funkce} 
+    \begin{itemizex}
+        \item Nulová funkce $\zero=0\dots0$
+        \item Funkce $\one=1\dots1$
+        \item Samotné proměnné $x_i$ jsou také funkcemi. Např. pro $m=2$ máme $x_1=0101$ a $x_2=0011$.
+        \item Ve funkce $x_i$ se vždy pravidelně střídají skupiny $2^{i-1}$ nul a $2^{i-1}$ jedniček.
+    \end{itemizex}
+\end{frame}
+
+
+\begin{frame}[t,fragile]\frametitle{Logické operace} 
+    \begin{itemizex}
+        \item Použijeme definice operací $+$ a $\cdot$, které jsme použili u binárních lineárních kódů, tj. sčítání a násobení modulo 2.
+        \item Pak pro boolovské funkce $f=\left<f_0,f_1,\dots,f_{2^m-1}\right>$ a $g=\left<g_0,g_1,\dots, g_{2^m-1}\right>$ a prvek $x\in\cela_2$ definujeme operace:
+        \begin{eqnarray*}
+f\cdot g&=& \left<f_0\cdot g_0, f_1\cdot g_1,\dots, f_{2^m-1}\cdot g_{2^m-1}\right>\\
+f+ g&=& \left<f_0+ g_0, f_1+ g_1,\dots, f_{2^m-1}+ g_{2^m-1}\right>\\
+x\cdot f=f\cdot x&=& \left<x\cdot f_0, x\cdot f_1,\dots, x\cdot f_{2^m-1}\right>\\
+x+f=f+x&=& \left<x+f_0, x+f_1,\dots, x+f_{2^m-1}\right>\\
+\neg f&=& 1+f
+        \end{eqnarray*}
+    \end{itemizex}
+\end{frame}
+
+
+\begin{frame}[t,fragile]\frametitle{Pozorování} 
+    \begin{itemizex}
+        \item Pokud máme funkci $f$ o třech proměnných, pak slovo $f_0f_1f_2f_3$ je zároveň funkce dvou proměnných tvaru $f(x_1, x_2, 0)$.
+$$
+\begin{array}{l|cccccccc}
+x_1&0&1&0&1&0&1&0&1\\
+x_2&0&0&1&1&0&0&1&1\\
+x_3&0&0&0&0&1&1&1&1\\\hline
+f&0&1&1&1&0&0&1&0
+\end{array}
+$$
+        \item Pokud definujeme $g(x_1, x_2)=f(x_1, x_2, 0)$, pak $g=0111$, první čtyři symboly funkce $f$. Podobně pro $f(x_1, x_2, 1)$.
+        \item Obecně: $f(x_1, x_2, \dots, x_{m-1}, 0)=f_0f_1\dots f_{2^{m-1}-1}$ a $f(x_1, x_2, \dots, x_{m-1}, 1)=f_{2^{m-1}}f_{2^{m-1}+1}\dots f_{2^{m}-1}$.
+    \end{itemizex}
+\end{frame}
+
+
+
+\begin{frame}[t,fragile]\frametitle{Boolovské polynomy} 
+    \begin{itemizex}
+        \item Boolovské funkce můžeme také reprezentovat jako součty a součiny funkcí $x_i$ a $\one$.
+        \item Příklad: $f=0110$. 
+$$
+\begin{array}{l|cccc}
+x_1&0&1&0&1\\
+x_2&0&0&1&1\\\hline
+f&0&1&1&0
+\end{array}
+$$
+        Funkci můžeme přepsat takto: $f(x_1, x_2)=x_1+x_2$.
+        \item Tomuto tvaru říkáme boolovský polynom.
+    \end{itemizex}
+\end{frame}
+
+
+\begin{frame}[t,fragile]\frametitle{Boolovské polynomy 2} 
+  \begin{itemizex}
+    \item Platí, že $x_i^2=x_i$. V polynomu se tak nevyskytují vyšší mocnitelé než 1.
+    \item Boolovský polynom $m$ proměnných je součet funkce $\one$ a členů
+    $$
+    x_1^{i_1} x_2^{i_2}\dots x_m^{i_m},
+    $$
+    kde $i_1, \dots, i_m\in\cela_2$. Přitom $x_i^0=\one, x_i^1=x_i$. Pro $m=3$ máme:
+    \begin{eqnarray*}
+  x_1^1x_2^0x_3^0&=& x_1\\
+  x_1^0x_2^1x_3^1&=& x_2x_3\\
+  x_1^0x_2^0x_3^0&=& \one\\
+    \end{eqnarray*}
+  \end{itemizex}
+\end{frame}
+
+
+\begin{frame}[t,fragile]\frametitle{Boolovské polynomy -- definice} 
+  \begin{definice}
+  Boolovský polynom reprezentující boolovskou funkci $f$ o $m$ proměnných je výraz ve tvaru
+  $$
+  f(x_1, x_2, \dots, x_m) = \sum_{i=0}^{2^{m}-1}q_i\cdot x_1^{i_1}x_2^{i_2}\dots x_m^{i_m},
+  $$
+  kde $q_i\in\cela_2$ a číslo $i$ má binární rozvoj $i_mi_{m-1}\dots i_2i_1$.
+  \end{definice}
+
+  Pro funkce dvou proměnných tak má polynom tvar
+  $$
+  q_0\one+q_1x_1+q_2x_2+q_3x_1x_2.
+  $$
+\end{frame}
+
+
+\begin{frame}[t,fragile]\frametitle{Příklad} 
+    \begin{itemizex}
+        \item Pro $f=x_2+x_1x_2$ máme:
+$$
+q_0+q_1x_1+q_2x_2+q_3x_1x_2,
+$$
+        kde $q_0=q_1=0,\quad q_2= q_3=1$.
+        \item Pro $f=00001111$ máme:
+$$
+q_0+q_1x_1+q_2x_2+q_3x_1x_2+q_4x_3+q_5x_1x_3+q_6x_2x_3+q_7x_1x_2x_3,
+$$
+        kde $q_4=1$ a zbytek je nula. 
+    \end{itemizex}
+\end{frame}
+
+
+\begin{frame}[t,fragile]\frametitle{Snížení počtu proměnných} 
+    \begin{veta}
+    Pro každou boolovskou funkci $m+1$ proměnných $f(x_1,\dots,x_m, x_{m+1})$ platí
+    $$
+f = f(x_1,\dots,x_m,0)+[f(x_1,\dots,x_m,0)+f(x_1, \dots, x_m,1)]\cdot x_{m+1}
+    $$
+    \end{veta}
+
+    Důkaz: Dosadíme za $x_{m+1}$ jedna a nula. 
+\end{frame}
+
+
+\begin{frame}[t,fragile]\frametitle{Příklad} 
+Převedeme funkci dvou proměnných $f=0111$ na polynom.
+$$
+f=01+(01+11)x_2=01+10x_2
+$$
+Dále vidíme, že 
+\begin{eqnarray*}
+01&=& 0+(0+1)x_1=x_1\\
+10&=& 1+(1+0)x_1=1+x_1
+\end{eqnarray*}
+Takže 
+$$
+f=01+10x_2=x_1+(1+x_1)x_2=x_1+x_2+x_1x_2.
+$$
+\end{frame}
+
+
+\begin{frame}[t,fragile]\frametitle{Množiny $M(i)$} 
+    \begin{definice}
+        Nechť má číslo $i$ binární rozvoj $i_{n}\dots i_2i_1$. Pak $M(i)$ je množina všech čísel $j\le i$ takových, že jejich binární rozvoj je $j_{n}\dots j_2j_1$ a přitom platí, že pokud $j_k=1$, pak $i_k=1$ pro všechna $k\in\{1,\dots,n\}$.
+        $$
+M(i_{n}\dots i_2i_1)=\{j_{n}\dots j_2j_1\sep \forall k \in \{1,\dots,n\}: j_k=1\Rightarrow i_k=1\}
+        $$
+    \end{definice}
+
+    Příklady: 
+    $$
+    M(0)=\{0\},\quad M(1) = \{0,1\},\quad M(2)=\{0,2\},\quad M(3)=\{0,1,2,3\}.
+    $$
+
+    Jak budou vypadat množiny $M(2^i)$ a $M(2^i-1)$ pro $i\in\mathbb{N}$? 
+\end{frame}
+
+
+\begin{frame}[t,fragile]\frametitle{Množina $M(i+2^m)$} 
+(Zde budeme výjimečně uvažovat klasický neobrácený binární rozvoj.) Nechť $i,m\in\mathbb{N}_0$ a $2^m\le i < 2^{m+1}$. Pak číslo $i$ má binární rozvoj $i=i_1i_2\dots i_{m+1}$, kde $i_1=1$. Např. pro $m=2$ máme čísla 
+$$
+4_{10}=100_2,\quad 5_{10}=101_2,\quad 6_{10}=110_2,\quad 7_{10}=111_2.
+$$
+Číslo $2^m$ pak má tvar $10\dots0$ ($m$ nul). Součet $i+2^m$ bude mít tvar: $10i_2\dots i_{m+1}$. Tj. čísla $i_2\dots i_{m+1}$ zůstanou v součtu stejná. Např. $5+4=9$ neboli $101+100=1001$. 
+\emptyline
+Je to podobné, jako když v desítkové soustavě přičítáme k číslu $i$ číslo $10^m$. Také se posledních $m$ číslic čísla $i$ nezmění. 
+\emptyline
+Jaký bude vztah množin $M(i)$ a $M(i+2^m)$?
+\emptyline
+
+\end{frame}
+
+
+\begin{frame}[t,fragile]\frametitle{Pokračování\dots} 
+Vidíme, že čísla $i$ a $i+2^m$ se liší pouze v prvních dvou symbolech. Tedy pro všechna $j\in M(i)$ s rozvojem $j=j_1j_2\dots j_{m+1}$, která mají $j_1=0$ platí, že $j\in M(i+2^m)$. Neboli pro všechna $j\in M(i)$ taková, že $j<2^m$, platí $j\in M(i+2^m)$.
+\emptyline
+Součet $i+2^m$ má tedy tvar $i_0i_1i_2\dots i_{m+1}$, kde $i_0=1, i_1=0$. Pokud v $M(i)$ bylo $j'$, kde $j'_1=1$, tak v $M(i+2^m)$ bude $j''$, kde $j''_0=1, j''_1=0$, přičemž ostatní číslice budou stejné, tj. $j'_k=j''_k$ pro $k\in\{2,\dots m+1\}$. Tedy pokud $j\in M(i)$, pak $j+2^m\in M(i+2^m)$.
+\emptyline
+Můžete tak napsat:
+$$
+M(i+2^m) = \{j\in M(i)\sep j < 2^m \} \cup \{j+2^m\sep j\in M(i)\}.
+$$
+\end{frame}
+
+
+
+\begin{frame}[t,fragile]\frametitle{Jak vyjádřit polynom z funkce} 
+\begin{veta}
+ Každá boolovská funkce $f=f_0\dots f_{2^m-1}$ je polynomem
+    $$
+f = \sum_{i=0}^{2^{m}-1}q_i\cdot x_1^{i_1}x_2^{i_2}\dots x_m^{i_m},
+    $$
+    kde $i$ má binární rozvoj $i_m\dots i_2i_1$ a koeficienty $q_i$ jsou rovny
+    $$
+    q_i=\sum_{j\in M(i)}f_j.
+    $$
+\end{veta}
+\end{frame}
+
+
+\begin{frame}[t,fragile]\frametitle{Příklad} 
+    Vyjádříme funkci $f=1101$:
+    \begin{eqnarray*}
+    M(0)=\{0\},\quad&& q_0= f_0=1\\
+    M(1)=\{0,1\},\quad&& q_1= f_0+f_1=0\\
+    M(2)=\{0,2\},\quad&& q_2= f_0+f_2=1\\
+    M(3)=\{0,1,2,3\},\quad&&q_3=f_0+f_1+f_2+f_3=1
+    \end{eqnarray*}
+
+    $$
+f=q_0+q_1x_1+q_2x_2+q_3x_1x_2=1+x_2+x_1x_2.
+    $$
+\end{frame}
+
+
+\begin{frame}[t,fragile]\frametitle{Důkaz} 
+Máme dokázat:
+$$
+f = \sum_{i=0}^{2^{m}-1}q_i\cdot x_1^{i_1}x_2^{i_2}\dots x_m^{i_m},\quad q_i=\sum_{j\in M(i)}f_j.
+$$
+Postupujeme matematickou indukcí. Pro $m=1$ snadno ověříme:
+$$
+f(x_1) = q_01+q_1x_1=f_0+(f_0+f_1)x_1.
+$$
+
+\end{frame}
+
+
+\begin{frame}[t,fragile]\frametitle{Důkaz: pokračování} 
+\footnotesize
+Použijeme indukční předpoklad na funkci $f(x_1,\dots,x_m,0)$, která má $m$ proměnných:
+$$
+f(x_1,\dots,x_m,0)=\sum_{i=0}^{2^m-1}q_i'\cdot x_1^{i_1}\dots x_m^{i_m}.
+$$
+Koeficienty $q_i'$ se rovnají (Využíváme toho, že $x_{m+1}$ má v levé polovině pravdivostní tabulky hodnotu 0, v pravé polovině 1. Dále využíváme toho, že pokud $m$-ciferný rozvoj čísla $j$ je $j_m\dots j_1$, pak jeho $(m+1)$-ciferný rozvoj je $0j_m\dots j_1$):
+$$
+q_i'=\sum_{j\in M(i)} f(j_1,\dots,j_m,0) =\sum_{j\in M(i)}f_j=q_i.
+$$
+Totéž pro funkci $f(x_1,\dots,x_m,1)$:
+$$
+f(x_1,\dots,x_m,1)=\sum_{i=0}^{2^m-1}q_i''\cdot x_1^{i_1}\dots x_m^{i_m},\qquad q_i''=\sum_{j\in M(i)} f(j_1,\dots,j_m,1) =\sum_{j\in M(i)}f_{j+2^m}.
+$$
+\end{frame}
+
+
+\begin{frame}[t,fragile]\frametitle{Důkaz: pokračování\dots} 
+\footnotesize
+Nyní využijeme vzorce 
+$$
+f(x_1,\dots,x_m, x_{m+1}) = f(x_1,\dots,x_m,0)+[f(x_1,\dots, x_m,0)+f(x_1, \dots, x_m,1)]\cdot x_{m+1}
+$$
+a rozepíšeme naši funkci $f(x_1,\dots,x_m, x_{m+1})$ pomocí předchozích výsledků:
+
+\begin{eqnarray*}
+f(x_1,\dots,x_m, x_{m+1}) &=&  \sum_{i=0}^{2^m-1}q_i x_1^{i_1}\dots x_m^{i_m}+\left[\sum_{i=0}^{2^m-1}q_i x_1^{i_1}\dots x_m^{i_m}+\sum_{i=0}^{2^m-1}q_i'' x_1^{i_1}\dots x_m^{i_m}\right]x_{m+1}\\
+&=& \sum_{i=0}^{2^m-1}q_i x_1^{i_1}\dots x_m^{i_m}+\sum_{i=0}^{2^m-1}(q_i+q_i'') x_1^{i_1}\dots x_m^{i_m}x_{m+1}.
+\end{eqnarray*}
+
+Tento výraz obsahuje všechny součiny $x_1\dots x_mx_{m+1}$. Ty součiny, které neobsahují $x_{m+1}$ jsou v levé sumě, ty, které obsahují $x_{m+1}$ jsou v pravé sumě. Koeficienty u součinů jsou $q_i$ a $(q_i+q_i'')$. Nyní tak musíme dokázat, že tyto koeficienty jsou stejné, jako koeficienty u původní funkce $f(x_1,\dots,x_m, x_{m+1})$.
+
+
+\end{frame}
+
+
+\begin{frame}[t,fragile]\frametitle{Důkaz: finále} 
+\footnotesize
+% $$
+% \sum_{i=0}^{2^m-1}q_i x_1^{i_1}\dots x_m^{i_m}+\sum_{i=0}^{2^m-1}(q_i+q_i'') x_1^{i_1}\dots x_m^{i_m}x_{m+1}
+% $$
+Všechna čísla $0,\dots,2^{m+1}$ lze rozdělit na: $\le2^m-1$ s binárním rozvojem $0i_m\dots i_1$. Pak platí, že koeficient u členu
+$$
+x_i^{i_1}\dots x_m^{i_m}=x_i^{i_1}\dots x_m^{i_m}x_{m+1}^{0}
+$$
+je $q_i$. Dále pro $\ge2^m$ s rozvojem $1i_m\dots i_1$ platí, že koeficient u členu $x_i^{i_1}\dots x_m^{i_m}x_{m+1}^1$ je rovný $q_i+q_i''$. Dále dokážeme, že $q_{i+2^m}=q_i+q_i''$. Platí, že
+$$
+q_i''=\sum_{j\in M(i)} f(j_1,\dots,j_m,1) =\sum_{j\in M(i)}f_{j+2^m},\qquad q_i=\sum_{j\in M(i)} f(j_1,\dots,j_m,0)=\sum_{j\in M(i)}f_j
+$$
+Tedy pokud sečteme $q_i+q_i''$, dostaneme:
+$$
+q_i+q_i''=\sum_{j\in M(i)}f_j+\sum_{j\in M(i)}f_{j+2^m}=\sum_{j\in M(i+2^m)}f_j=q_{i+2^m}.
+$$
+Zde jsme využili faktu, že $M(i+2^m)$ obsahuje všechna $j\le 2^m-1$, která leží v $M(i)$ a dále obsahuje všechna $j+2^m$ pro $j\in M(i)$.\qed
+\end{frame}
+
+
+\begin{frame}[t,fragile]\frametitle{Báze lineárního prostoru $\cela_2^{2^m}$} 
+    Z předchozí věty víme, že každá funkce / každé slovo lze vyjádřit pomocí součtů součinů funkcí $\one, x_1,\dots, x_m$. Funkce
+    \begin{eqnarray*}
+    &&\one,\\
+    &&x_1,x_2,\dots,x_m,\\
+    &&x_ix_j\quad\mbox{pro}\quad i,j\in\{1,\dots,m\},\\
+    &&\vdots,\\
+    &&x_1x_2\dots x_m
+    \end{eqnarray*}
+    tak tvoří bázi lineárního prostoru $\cela_2^{2^m}$. Nezávislost funkcí plyne z počtu těchto funkcí. Počet funkcí v bázi je roven:
+$$
+{m\choose0}+{m\choose1}+{m\choose2}+\dots+{m\choose m-1}+{m\choose m}.
+$$
+
+\end{frame}
+
+\begin{frame}[t,fragile]\frametitle{Nezávislost} 
+Přitom binomická věta říká:
+    $$
+(x+y)^m=\sum_{k=0}^{m}{m\choose k}x^{m-k}y^k.
+    $$
+Pokud dosadíme $x=y=1$, máme:
+$$
+2^m=\sum_{k=0}^{m}{m\choose k}={m\choose0}+{m\choose1}+{m\choose2}+\dots+{m\choose m-1}+{m\choose m}.
+$$
+Počet funkcí v bázi je tak roven $2^m$, což je dimenze prostoru $\cela_2^{2^m}$.
+\end{frame}
+
+
+\begin{frame}[t,fragile]\frametitle{Stupeň polynomu} 
+    Stupeň boolovského polynomu
+        $$
+        f = \sum_{i=0}^{2^{m}-1}q_i\cdot x_1^{i_1}x_2^{i_2}\dots x_m^{i_m}
+        $$
+        je maximální váha slova $i_1i_2\dots i_m$ takového, že $q_i=1$. Tedy je to největší počet proměnných, které se vyskytují v nějakém sčítanci. 
+\emptyline
+        Příklady:
+        \begin{itemizex}
+            \item Polynom $1+x_1+x_1x_2$ má stupeň 2,
+            \item polynom $x_1x_3+x_1x_2x_3$ má stupeň 3.
+        \end{itemizex}
+\end{frame}
+
+
+\begin{frame}[t,fragile]\frametitle{Reed-Mullerovy kódy}
+    \begin{itemizex}
+        \item Binární kód délky $n=2^m$ pro $m\in\mathbb{N}$.
+        \item Kódová slova jsou boolovské polynomy $m$ proměnných.
+    \end{itemizex}
+
+    \begin{definice}
+    Reed-Mullerovým kódem stupně $r$ a délky $2^m$ se nazývá množina $R(r,m)$ všech boolovských polynomů $m$ proměnných stupně nejvýše $r$.
+    \end{definice}
+\end{frame}
+
+
+\begin{frame}[t,fragile]\frametitle{Příklad Reed-Mullerových kódů} 
+\begin{figure}[htb]
+    \centering
+    \includegraphics[scale=0.7]{img/reed.pdf}
+\end{figure}
+\end{frame}
+
+
+
+\begin{frame}[t,fragile]\frametitle{Generující matice} 
+    \begin{itemizex}
+        \item Reed-Mullerův kód je lineární, protože součet dvou polynomů stupně nejvýše $r$ je také polynom stupně nejvýše $r$.
+        \item Generující matice tvoří všechny polynomy obsahující jediný výraz ve tvaru součinu o stupni $\le r$. Matice kódu $R(2,3)$:
+    \end{itemizex}
+
+\begin{figure}[htb]
+    \centering
+    \includegraphics[scale=1]{img/reed-matice.pdf}
+\end{figure}
+\end{frame}
+
+
+\begin{frame}[t,fragile]\frametitle{Kódování} 
+    \begin{itemizex}
+        \item Slovo, které chceme zakódovat, má délku $k$, kde
+        $$
+k=\sum_{i=0}^r{m\choose i}
+        $$
+        \item Pokud chceme zakódovat slovo $u$, pak symboly $u_i$ nám říkají, které součiny z generující matice budou ve výsledném polynomu.
+        \item Příklad: chceme zakódovat slovo $0010110$. Použijeme předchozí matici $G$. Pak 
+        $$
+0010110\cdot G=x_2+x_1x_2+x_1x_3=00100111     
+        $$
+    \end{itemizex}
+\end{frame}
+
+
+\begin{frame}[t,fragile]\frametitle{Vlastnosti} 
+    \begin{itemizex}
+        \item $R(m,m)=\cela_2^{2^m}$
+        \item $R(m-1,m)$ je $(2^m,2^m-1)$ kód sudé parity (ale není systematický, viz příklad).
+        \item $R(0, m)$ je $(2^m,1)$ opakovací kód. 
+        \item Minimální vzdálenost $R(r,m)$ kódu je $2^{m-r}$.
+        \item $R(1,5)$ je $(32,6)$ kód, který využil kosmický koráb Mariner 9 při vysílání fotografií z Marsu v roce 1972.
+    \end{itemizex}
+\end{frame}
+
+
+
+\end{document}
