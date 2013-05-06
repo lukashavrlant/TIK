@@ -157,7 +157,7 @@ $$
         \item Nulová funkce $\zero=0\dots0$
         \item Funkce $\one=1\dots1$
         \item Samotné proměnné $x_i$ jsou také funkcemi. Např. pro $m=2$ máme $x_1=0101$ a $x_2=0011$.
-        \item Ve funkce $x_i$ se vždy pravidelně střídají skupiny $2^{i-1}$ nul a $2^{i-1}$ jedniček.
+        \item Ve funkci $x_i$ se vždy pravidelně střídají skupiny $2^{i-1}$ nul a $2^{i-1}$ jedniček.
     \end{itemizex}
 \end{frame}
 
@@ -308,7 +308,7 @@ M(i_{n}\dots i_2i_1)=\{j_{n}\dots j_2j_1\sep \forall k \in \{1,\dots,n\}: j_k=1\
 
 
 \begin{frame}[t,fragile]\frametitle{Množina $M(i+2^m)$} 
-(Zde budeme výjimečně uvažovat klasický neobrácený binární rozvoj.) Nechť $i,m\in\mathbb{N}_0$ a $2^m\le i < 2^{m+1}$. Pak číslo $i$ má binární rozvoj $i=i_1i_2\dots i_{m+1}$, kde $i_1=1$. Např. pro $m=2$ máme čísla 
+(Zde budeme výjimečně uvažovat klasický neobrácený binární rozvoj.) Nechť $i,m\in\mathbb{N}$ a $2^m\le i < 2^{m+1}$. Pak číslo $i$ má binární rozvoj $i=i_1i_2\dots i_{m+1}$, kde $i_1=1$. Např. pro $m=2$ máme čísla 
 $$
 4_{10}=100_2,\quad 5_{10}=101_2,\quad 6_{10}=110_2,\quad 7_{10}=111_2.
 $$
@@ -325,11 +325,11 @@ Jaký bude vztah množin $M(i)$ a $M(i+2^m)$?
 \begin{frame}[t,fragile]\frametitle{Pokračování\dots} 
 Vidíme, že čísla $i$ a $i+2^m$ se liší pouze v prvních dvou symbolech. Tedy pro všechna $j\in M(i)$ s rozvojem $j=j_1j_2\dots j_{m+1}$, která mají $j_1=0$ platí, že $j\in M(i+2^m)$. Neboli pro všechna $j\in M(i)$ taková, že $j<2^m$, platí $j\in M(i+2^m)$.
 \emptyline
-Součet $i+2^m$ má tedy tvar $i_0i_1i_2\dots i_{m+1}$, kde $i_0=1, i_1=0$. Pokud v $M(i)$ bylo $j'$, kde $j'_1=1$, tak v $M(i+2^m)$ bude $j''$, kde $j''_0=1, j''_1=0$, přičemž ostatní číslice budou stejné, tj. $j'_k=j''_k$ pro $k\in\{2,\dots m+1\}$. Tedy pokud $j\in M(i)$, pak $j+2^m\in M(i+2^m)$.
+Součet $i+2^m$ má tedy tvar $i_0i_1i_2\dots i_{m+1}$, kde $i_0=1, i_1=0$. Pokud v $M(i)$ bylo $j'$, kde $j'_1=1$, tak v $M(i+2^m)$ bude $j''$, kde $j''_0=1, j''_1=0$, přičemž ostatní číslice budou stejné, tj. $j'_k=j''_k$ pro $k\in\{2,\dots m+1\}$. Tedy pokud $j\in M(i)$ a $j\ge2^m$, pak $j+2^m\in M(i+2^m)$.
 \emptyline
-Můžete tak napsat:
+Můžeme tak napsat:
 $$
-M(i+2^m) = \{j\in M(i)\sep j < 2^m \} \cup \{j+2^m\sep j\in M(i)\}.
+M(i+2^m) = \{j\sep j\in M(i), j < 2^m \} \cup \{j+2^m\sep j\in M(i), j\ge 2^m\}.
 $$
 \end{frame}
 
